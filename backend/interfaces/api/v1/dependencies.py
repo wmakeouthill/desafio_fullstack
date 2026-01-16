@@ -15,6 +15,9 @@ from infrastructure.ai.classificador_factory import ClassificadorFactory
 from infrastructure.nlp.preprocessador import PreprocessadorTexto
 from infrastructure.file_readers.leitor_txt import LeitorTxt
 from infrastructure.file_readers.leitor_pdf import LeitorPdf
+from infrastructure.file_readers.leitor_eml import LeitorEml
+from infrastructure.file_readers.leitor_msg import LeitorMsg
+from infrastructure.file_readers.leitor_mbox import LeitorMbox
 
 
 @lru_cache
@@ -59,7 +62,13 @@ def get_classificador(provider: Optional[str] = None) -> ClassificadorPort:
 
 def get_leitores():
     """Retorna a lista de leitores de arquivo disponíveis."""
-    return [LeitorTxt(), LeitorPdf()]
+    return [
+        LeitorTxt(),
+        LeitorPdf(),
+        LeitorEml(),
+        LeitorMsg(),
+        LeitorMbox()
+    ]
 
 
 def get_classificar_email_use_case(provider: Optional[str] = None) -> ClassificarEmailUseCase:

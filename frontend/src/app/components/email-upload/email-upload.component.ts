@@ -95,8 +95,9 @@ export class EmailUploadComponent {
 
             // Validar extensão
             const extensao = arquivo.name.split('.').pop()?.toLowerCase();
-            if (extensao !== 'txt' && extensao !== 'pdf') {
-                this.erro.set('Formato não suportado. Use arquivos .txt ou .pdf');
+            const formatosSuportados = ['txt', 'pdf', 'eml', 'msg', 'mbox'];
+            if (!extensao || !formatosSuportados.includes(extensao)) {
+                this.erro.set('Formato não suportado. Use arquivos .txt, .pdf, .eml, .msg ou .mbox');
                 return;
             }
 

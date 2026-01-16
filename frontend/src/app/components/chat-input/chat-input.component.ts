@@ -104,8 +104,9 @@ export class ChatInputComponent {
             const arquivo = input.files[0];
 
             const extensao = arquivo.name.split('.').pop()?.toLowerCase();
-            if (extensao !== 'txt' && extensao !== 'pdf') {
-                this.erro.set('Formato não suportado. Use arquivos .txt ou .pdf');
+            const formatosSuportados = ['txt', 'pdf', 'eml', 'msg', 'mbox'];
+            if (!extensao || !formatosSuportados.includes(extensao)) {
+                this.erro.set('Formato não suportado. Use arquivos .txt, .pdf, .eml, .msg ou .mbox');
                 return;
             }
 
@@ -142,10 +143,10 @@ export class ChatInputComponent {
     @HostListener('document:click', ['$event'])
     onDocumentClick(event: Event): void {
         if (!this.isBrowser) return;
-        
+
         const target = event.target as HTMLElement;
         const providerSelector = target.closest('.provider-selector');
-        
+
         if (!providerSelector && this.menuProviderAberto()) {
             this.fecharMenu();
         }

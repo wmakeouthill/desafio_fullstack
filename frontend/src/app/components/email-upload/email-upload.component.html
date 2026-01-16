@@ -48,7 +48,7 @@
     <div class="upload-area">
       <input
         type="file"
-        accept=".txt,.pdf"
+        accept=".txt,.pdf,.eml,.msg,.mbox"
         (change)="onArquivoSelecionado($event)"
         #fileInput
         hidden>
@@ -62,7 +62,7 @@
         </div>
       } @else {
         <button type="button" class="btn-upload" (click)="fileInput.click()">
-          📁 Selecionar Arquivo (.txt ou .pdf)
+          📁 Selecionar Arquivo (.txt, .pdf, .eml, .msg, .mbox)
         </button>
       }
     </div>
