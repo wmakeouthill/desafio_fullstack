@@ -20,6 +20,11 @@
                         {{ providerLabel() }}
                     }
                 </span>
+                @if (message().tipo === 'ai' && modeloUsado()) {
+                    <span class="modelo-badge" title="Modelo de IA utilizado">
+                        🧠 {{ modeloUsado() }}
+                    </span>
+                }
                 <span class="message-time">{{ formatarHora() }}</span>
             </div>
 

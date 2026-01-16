@@ -48,8 +48,12 @@ class Settings(BaseSettings):
         description="Chave de API da OpenAI"
     )
     openai_model: str = Field(
-        default="gpt-3.5-turbo",
+        default="gpt-4o-mini",
         description="Modelo da OpenAI a ser usado"
+    )
+    openai_max_tokens: int = Field(
+        default=4000,
+        description="Máximo de tokens para resposta da OpenAI"
     )
     
     # Google Gemini
@@ -58,8 +62,12 @@ class Settings(BaseSettings):
         description="Chave de API do Google Gemini"
     )
     gemini_model: str = Field(
-        default="gemini-1.5-flash",
+        default="gemini-2.5-flash-preview-05-20",
         description="Modelo do Gemini a ser usado"
+    )
+    gemini_max_tokens: int = Field(
+        default=8192,
+        description="Máximo de tokens para resposta do Gemini"
     )
     
     class Config:

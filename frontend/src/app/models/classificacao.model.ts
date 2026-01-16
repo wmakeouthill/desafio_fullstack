@@ -12,6 +12,7 @@ export interface ClassificacaoResultado {
     assunto?: string | null;
     remetente?: string | null;
     destinatario?: string | null;
+    modelo_usado?: string | null;
 }
 
 export interface ClassificarEmailRequest {

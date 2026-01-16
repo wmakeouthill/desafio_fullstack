@@ -44,19 +44,22 @@ def get_classificador(provider: Optional[str] = None) -> ClassificadorPort:
     # Usar provider do request ou o padrão do settings
     provider_name = provider or settings.ai_provider
     
-    # Selecionar API key e modelo baseado no provider
+    # Selecionar API key, modelo e max_tokens baseado no provider
     if provider_name.lower() == "gemini":
         api_key = settings.gemini_api_key
         modelo = settings.gemini_model
+        max_tokens = settings.gemini_max_tokens
     else:
         api_key = settings.openai_api_key
         modelo = settings.openai_model
+        max_tokens = settings.openai_max_tokens
     
     return ClassificadorFactory.criar_por_nome(
         provider_name=provider_name,
         api_key=api_key,
         modelo=modelo,
-        preprocessador=preprocessador
+        preprocessador=preprocessador,
+        max_tokens=max_tokens
     )
 
 

@@ -49,6 +49,10 @@ export class ChatMessageComponent {
         this.message().provider === 'gemini' ? 'Gemini' : 'OpenAI'
     );
 
+    readonly modeloUsado = computed(() =>
+        this.message().resultado?.modelo_usado || null
+    );
+
     readonly nomeFuncionario = 'Ana Carolina Santos';
 
     async copiar(): Promise<void> {

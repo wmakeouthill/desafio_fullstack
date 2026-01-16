@@ -32,3 +32,23 @@ class ClassificadorPort(ABC):
             ClassificacaoException: Se ocorrer erro na classificação
         """
         pass
+    
+    @abstractmethod
+    def get_modelo(self) -> str:
+        """
+        Retorna o nome do modelo de IA sendo utilizado.
+        
+        Returns:
+            Nome do modelo (ex: 'gpt-3.5-turbo', 'gemini-1.5-flash')
+        """
+        pass
+    
+    @abstractmethod
+    def get_provider(self) -> str:
+        """
+        Retorna o nome do provedor de IA.
+        
+        Returns:
+            Nome do provider (ex: 'openai', 'gemini')
+        """
+        pass

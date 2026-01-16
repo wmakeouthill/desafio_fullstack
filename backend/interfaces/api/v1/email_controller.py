@@ -4,6 +4,7 @@ Controller de Emails - API REST.
 Endpoints para classificação de emails via texto ou arquivo.
 """
 
+import logging
 from typing import Optional
 from fastapi import APIRouter, UploadFile, File, HTTPException, Query, status
 
@@ -23,6 +24,9 @@ from interfaces.api.v1.dependencies import (
     get_classificar_arquivo_use_case,
     get_available_providers,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 router = APIRouter(prefix="/emails", tags=["Emails"])
@@ -62,15 +66,24 @@ async def classificar_email(
     Retorna a categoria (Produtivo/Improdutivo), nível de confiança e resposta sugerida.
     """
     try:
+        provider_solicitado = request.provider or "padrão"
+        logger.info(f"🔵 [Controller] Requisição de classificação por texto | Provider solicitado: {provider_solicitado}")
+        
         use_case = get_classificar_email_use_case(provider=request.provider)
-        return use_case.executar(request)
+        resultado = use_case.executar(request)
+        
+        logger.info(f"🟢 [Controller] Resposta gerada com: {resultado.modelo_usado} | Categoria: {resultado.categoria}")
+        
+        return resultado
     
     except ConteudoInvalidoException as e:
+        logger.warning(f"🟡 [Controller] Conteúdo inválido: {e}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
     except ClassificacaoException as e:
+        logger.error(f"🔴 [Controller] Erro na classificação: {e}")
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=str(e)
@@ -119,28 +132,39 @@ async def classificar_arquivo(
         )
     
     try:
+        provider_solicitado = provider or "padrão"
+        logger.info(f"🔵 [Controller] Requisição de classificação por arquivo | Arquivo: {arquivo.filename} | Provider: {provider_solicitado}")
+        
         use_case = get_classificar_arquivo_use_case(provider=provider)
-        return use_case.executar(
+        resultado = use_case.executar(
             arquivo=conteudo,
             nome_arquivo=arquivo.filename or "arquivo_sem_nome"
         )
+        
+        logger.info(f"🟢 [Controller] Resposta gerada com: {resultado.modelo_usado} | Categoria: {resultado.categoria}")
+        
+        return resultado
     
     except FormatoNaoSuportadoException as e:
+        logger.warning(f"🟡 [Controller] Formato não suportado: {e}")
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
             detail=str(e)
         )
     except ArquivoInvalidoException as e:
+        logger.warning(f"🟡 [Controller] Arquivo inválido: {e}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
     except ConteudoInvalidoException as e:
+        logger.warning(f"🟡 [Controller] Conteúdo inválido: {e}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
     except ClassificacaoException as e:
+        logger.error(f"🔴 [Controller] Erro na classificação: {e}")
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=str(e)

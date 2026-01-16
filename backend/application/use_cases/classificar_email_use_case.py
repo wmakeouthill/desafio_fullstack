@@ -4,10 +4,15 @@ Use Case: Classificar Email por Texto.
 Caso de uso responsável por classificar um email a partir do seu conteúdo textual.
 """
 
+import logging
+
 from application.ports.classificador_port import ClassificadorPort
 from application.dtos.email_dto import ClassificarEmailRequest, ClassificarEmailResponse
 from domain.entities.email import Email
 from domain.exceptions import ConteudoInvalidoException, ClassificacaoException
+
+
+logger = logging.getLogger(__name__)
 
 
 class ClassificarEmailUseCase:
@@ -45,6 +50,12 @@ class ClassificarEmailUseCase:
             # Criar entidade de domínio (valida regras de negócio)
             email = Email(conteudo=request.conteudo)
             
+            # Obter informações do modelo sendo usado
+            modelo_usado = self._classificador.get_modelo()
+            provider = self._classificador.get_provider()
+            
+            logger.info(f"📧 [UseCase] Classificando email com provider={provider}, modelo={modelo_usado}")
+            
             # Executar classificação via porta (abstração)
             resultado = self._classificador.classificar(email.conteudo)
             
@@ -55,7 +66,8 @@ class ClassificarEmailUseCase:
                 resposta_sugerida=resultado.resposta_sugerida,
                 assunto=resultado.assunto,
                 remetente=resultado.remetente,
-                destinatario=resultado.destinatario
+                destinatario=resultado.destinatario,
+                modelo_usado=modelo_usado
             )
         
         except ValueError as e:

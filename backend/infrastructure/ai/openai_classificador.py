@@ -32,7 +32,8 @@ class OpenAIClassificador(ClassificadorPort):
         self,
         api_key: str,
         preprocessador: Optional[PreprocessadorTexto] = None,
-        modelo: str = "gpt-3.5-turbo"
+        modelo: str = "gpt-4o-mini",
+        max_tokens: int = 4000
     ):
         """
         Inicializa o classificador.
@@ -45,6 +46,7 @@ class OpenAIClassificador(ClassificadorPort):
         self._client = OpenAI(api_key=api_key)
         self._preprocessador = preprocessador or PreprocessadorTexto()
         self._modelo = modelo
+        self._max_tokens = max_tokens
     
     def classificar(self, conteudo: str) -> ClassificacaoResultado:
         """
@@ -60,6 +62,8 @@ class OpenAIClassificador(ClassificadorPort):
             ClassificacaoException: Se ocorrer erro na API
         """
         try:
+            logger.info(f"🤖 [OpenAI] Iniciando classificação com modelo: {self._modelo}")
+            
             # Pré-processar texto
             texto_processado = self._preprocessador.processar(conteudo)
             
@@ -67,11 +71,23 @@ class OpenAIClassificador(ClassificadorPort):
             resposta = self._chamar_api(texto_processado)
             
             # Converter resposta
-            return self._converter_resposta(resposta)
+            resultado = self._converter_resposta(resposta)
+            
+            logger.info(f"✅ [OpenAI] Resposta gerada com: {self._modelo} | Categoria: {resultado.categoria.value} | Confiança: {resultado.confianca:.2f}")
+            
+            return resultado
         
         except Exception as e:
-            logger.error(f"Erro ao classificar email: {e}")
+            logger.error(f"❌ [OpenAI] Erro ao classificar email com modelo {self._modelo}: {e}")
             raise ClassificacaoException(f"Falha na classificação: {str(e)}")
+    
+    def get_modelo(self) -> str:
+        """Retorna o nome do modelo de IA sendo utilizado."""
+        return self._modelo
+    
+    def get_provider(self) -> str:
+        """Retorna o nome do provedor de IA."""
+        return "openai"
     
     def _chamar_api(self, texto: str) -> dict:
         """
@@ -93,7 +109,7 @@ class OpenAIClassificador(ClassificadorPort):
                 {"role": "user", "content": user_prompt}
             ],
             temperature=0.3,
-            max_tokens=500,
+            max_tokens=self._max_tokens,
             response_format={"type": "json_object"}
         )
         

@@ -32,7 +32,8 @@ class GeminiClassificador(ClassificadorPort):
         self,
         api_key: str,
         preprocessador: Optional[PreprocessadorTexto] = None,
-        modelo: str = "gemini-1.5-flash"
+        modelo: str = "gemini-2.5-flash-preview-05-20",
+        max_tokens: int = 8192
     ):
         """
         Inicializa o classificador.
@@ -46,6 +47,7 @@ class GeminiClassificador(ClassificadorPort):
         self._model = genai.GenerativeModel(modelo)
         self._preprocessador = preprocessador or PreprocessadorTexto()
         self._modelo = modelo
+        self._max_tokens = max_tokens
     
     def classificar(self, conteudo: str) -> ClassificacaoResultado:
         """
@@ -61,6 +63,8 @@ class GeminiClassificador(ClassificadorPort):
             ClassificacaoException: Se ocorrer erro na API
         """
         try:
+            logger.info(f"🤖 [Gemini] Iniciando classificação com modelo: {self._modelo}")
+            
             # Pré-processar texto
             texto_processado = self._preprocessador.processar(conteudo)
             
@@ -68,11 +72,23 @@ class GeminiClassificador(ClassificadorPort):
             resposta = self._chamar_api(texto_processado)
             
             # Converter resposta
-            return self._converter_resposta(resposta)
+            resultado = self._converter_resposta(resposta)
+            
+            logger.info(f"✅ [Gemini] Resposta gerada com: {self._modelo} | Categoria: {resultado.categoria.value} | Confiança: {resultado.confianca:.2f}")
+            
+            return resultado
         
         except Exception as e:
-            logger.error(f"Erro ao classificar email com Gemini: {e}")
+            logger.error(f"❌ [Gemini] Erro ao classificar email com modelo {self._modelo}: {e}")
             raise ClassificacaoException(f"Falha na classificação: {str(e)}")
+    
+    def get_modelo(self) -> str:
+        """Retorna o nome do modelo de IA sendo utilizado."""
+        return self._modelo
+    
+    def get_provider(self) -> str:
+        """Retorna o nome do provedor de IA."""
+        return "gemini"
     
     def _chamar_api(self, texto: str) -> dict:
         """
@@ -90,7 +106,7 @@ class GeminiClassificador(ClassificadorPort):
             prompt,
             generation_config=genai.types.GenerationConfig(
                 temperature=0.3,
-                max_output_tokens=500,
+                max_output_tokens=self._max_tokens,
             )
         )
         

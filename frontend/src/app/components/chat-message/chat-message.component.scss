@@ -84,6 +84,7 @@ $border-radius-sm: 8px;
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 0.5rem;
+    flex-wrap: wrap;
 
     .sender-name {
         font-weight: 600;
@@ -91,9 +92,24 @@ $border-radius-sm: 8px;
         font-size: 0.9375rem;
     }
 
+    .modelo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.125rem 0.5rem;
+        background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba(#7c3aed, 0.1) 100%);
+        border: 1px solid rgba($primary-color, 0.2);
+        border-radius: 4px;
+        font-size: 0.6875rem;
+        font-weight: 500;
+        color: $primary-color;
+        letter-spacing: 0.025em;
+    }
+
     .message-time {
         font-size: 0.75rem;
         color: $gray-400;
+        margin-left: auto;
     }
 }
 

@@ -1,0 +1,46 @@
+# Arquivos ignorados no deploy do Cloud Run
+# Reduz tamanho do upload e tempo de build
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+*.egg
+.mypy_cache/
+.pytest_cache/
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing (não precisa em produção)
+tests/
+.coverage
+htmlcov/
+
+# Development files
+*.md
+.git/
+.gitignore
+.env
+.env.*
+!.env.example
+
+# Docker (já está usando o Dockerfile)
+docker-compose*.yml
+
+# Scripts de deploy (não precisa na imagem)
+deploy-*.ps1
+deploy-*.sh
+fly.toml

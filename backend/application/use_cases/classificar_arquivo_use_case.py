@@ -4,6 +4,7 @@ Use Case: Classificar Email por Arquivo.
 Caso de uso responsável por classificar um email a partir de um arquivo (.txt ou .pdf).
 """
 
+import logging
 from typing import List
 
 from application.ports.classificador_port import ClassificadorPort
@@ -16,6 +17,9 @@ from domain.exceptions import (
     ArquivoInvalidoException,
     FormatoNaoSuportadoException,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class ClassificarArquivoUseCase:
@@ -78,6 +82,12 @@ class ClassificarArquivoUseCase:
             # Criar entidade de domínio
             email = Email(conteudo=conteudo)
             
+            # Obter informações do modelo sendo usado
+            modelo_usado = self._classificador.get_modelo()
+            provider = self._classificador.get_provider()
+            
+            logger.info(f"📎 [UseCase] Classificando arquivo '{nome_arquivo}' com provider={provider}, modelo={modelo_usado}")
+            
             # Executar classificação
             resultado = self._classificador.classificar(email.conteudo)
             
@@ -89,7 +99,8 @@ class ClassificarArquivoUseCase:
                 nome_arquivo=nome_arquivo,
                 assunto=resultado.assunto,
                 remetente=resultado.remetente,
-                destinatario=resultado.destinatario
+                destinatario=resultado.destinatario,
+                modelo_usado=modelo_usado
             )
         
         except ValueError as e:

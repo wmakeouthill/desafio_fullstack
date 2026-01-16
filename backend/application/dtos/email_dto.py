@@ -62,6 +62,10 @@ class ClassificarEmailResponse(BaseModel):
         default=None,
         description="Destinatário detectado do email original"
     )
+    modelo_usado: Optional[str] = Field(
+        default=None,
+        description="Modelo de IA utilizado para gerar a resposta (ex: gpt-3.5-turbo, gemini-1.5-flash)"
+    )
     
     class Config:
         json_schema_extra = {
@@ -71,7 +75,8 @@ class ClassificarEmailResponse(BaseModel):
                 "resposta_sugerida": "Prezado(a), agradecemos o contato. Seu chamado #12345 está em análise e retornaremos em breve.",
                 "assunto": "Solicitação de Suporte",
                 "remetente": "João Silva <joao@empresa.com>",
-                "destinatario": "suporte@autou.com.br"
+                "destinatario": "suporte@autou.com.br",
+                "modelo_usado": "gpt-3.5-turbo"
             }
         }
 
@@ -93,6 +98,7 @@ class ClassificarArquivoResponse(ClassificarEmailResponse):
                 "nome_arquivo": "email_cliente.txt",
                 "assunto": "Dúvida sobre fatura",
                 "remetente": "cliente@email.com",
-                "destinatario": "financeiro@autou.com.br"
+                "destinatario": "financeiro@autou.com.br",
+                "modelo_usado": "gemini-1.5-flash"
             }
         }

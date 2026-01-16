@@ -31,7 +31,8 @@ class ClassificadorFactory:
         provider: AIProvider,
         api_key: str,
         modelo: Optional[str] = None,
-        preprocessador: Optional[PreprocessadorTexto] = None
+        preprocessador: Optional[PreprocessadorTexto] = None,
+        max_tokens: Optional[int] = None
     ) -> ClassificadorPort:
         """
         Cria uma instância do classificador baseado no provider.
@@ -41,6 +42,7 @@ class ClassificadorFactory:
             api_key: Chave de API do provedor
             modelo: Modelo específico a ser usado (opcional)
             preprocessador: Preprocessador de texto (opcional)
+            max_tokens: Máximo de tokens para resposta (opcional)
             
         Returns:
             Instância do classificador
@@ -54,14 +56,16 @@ class ClassificadorFactory:
             return OpenAIClassificador(
                 api_key=api_key,
                 preprocessador=preprocessador,
-                modelo=modelo or "gpt-3.5-turbo"
+                modelo=modelo or "gpt-4o-mini",
+                max_tokens=max_tokens or 4000
             )
         
         elif provider == AIProvider.GEMINI:
             return GeminiClassificador(
                 api_key=api_key,
                 preprocessador=preprocessador,
-                modelo=modelo or "gemini-1.5-flash"
+                modelo=modelo or "gemini-2.5-flash-preview-05-20",
+                max_tokens=max_tokens or 8192
             )
         
         else:
@@ -72,7 +76,8 @@ class ClassificadorFactory:
         provider_name: str,
         api_key: str,
         modelo: Optional[str] = None,
-        preprocessador: Optional[PreprocessadorTexto] = None
+        preprocessador: Optional[PreprocessadorTexto] = None,
+        max_tokens: Optional[int] = None
     ) -> ClassificadorPort:
         """
         Cria classificador pelo nome do provider (string).
@@ -82,6 +87,7 @@ class ClassificadorFactory:
             api_key: Chave de API
             modelo: Modelo específico (opcional)
             preprocessador: Preprocessador (opcional)
+            max_tokens: Máximo de tokens para resposta (opcional)
             
         Returns:
             Instância do classificador
@@ -98,5 +104,6 @@ class ClassificadorFactory:
             provider=provider,
             api_key=api_key,
             modelo=modelo,
-            preprocessador=preprocessador
+            preprocessador=preprocessador,
+            max_tokens=max_tokens
         )
