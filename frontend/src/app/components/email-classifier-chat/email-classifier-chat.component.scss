@@ -118,10 +118,9 @@ $gray-700: #334155;
     flex-direction: column;
     max-width: 960px;
     width: calc(100% - 2rem);
-    margin: 0 auto;
-    margin-top: 60px; // Espaço abaixo do header global
-    margin-bottom: 1rem;
-    height: calc(100vh - 60px - 1rem);
+    margin: 1rem auto;
+    margin-top: calc(44px + 1rem); // Header height + gap
+    height: calc(100vh - 44px - 2rem); // 100vh - header - (top gap + bottom gap)
     min-height: 0;
     background: $dark-card;
     border: 1px solid $dark-border;

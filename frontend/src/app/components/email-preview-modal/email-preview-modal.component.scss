@@ -33,8 +33,13 @@ $border-radius-sm: 8px;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 // Container do Modal
@@ -59,6 +64,7 @@ $border-radius-sm: 8px;
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -89,6 +95,30 @@ $border-radius-sm: 8px;
 .header-title {
     font-weight: 600;
     font-size: 1rem;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-theme {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
 }
 
 .btn-close {
@@ -385,5 +415,122 @@ $border-radius-sm: 8px;
     .signature-contact {
         flex-direction: column;
         gap: 0.5rem;
+    }
+}
+
+// ==========================================
+// Dark Mode Styles
+// ==========================================
+.modal-container.dark-mode {
+    background: #1c2128;
+
+    .email-toolbar {
+        background: #252d38;
+        border-bottom-color: #30363d;
+    }
+
+    .toolbar-title {
+        color: #cbd5e1;
+    }
+
+    .email-header {
+        background: #0f1419;
+        border-bottom-color: #30363d;
+    }
+
+    .meta-label {
+        color: #64748b;
+    }
+
+    .meta-value {
+        color: #cbd5e1;
+
+        &.subject {
+            color: white;
+        }
+    }
+
+    .sender-name {
+        color: white;
+    }
+
+    .sender-email {
+        color: #64748b;
+    }
+
+    .email-body {
+        background: #1c2128;
+    }
+
+    .email-greeting {
+        color: #e2e8f0;
+    }
+
+    .email-content {
+        color: #cbd5e1;
+    }
+
+    .email-signature {
+        border-top-color: #30363d;
+    }
+
+    .signature-closing {
+        color: #cbd5e1;
+    }
+
+    .signature-block {
+        background: #0f1419;
+    }
+
+    .signature-name {
+        color: white;
+    }
+
+    .signature-cargo {
+        color: #94a3b8;
+    }
+
+    .signature-dept {
+        color: #64748b;
+    }
+
+    .signature-divider {
+        background: #30363d;
+    }
+
+    .contact-text {
+        color: #94a3b8;
+    }
+
+    .signature-footer {
+        border-top-color: #30363d;
+    }
+
+    .footer-notice {
+        color: #64748b;
+    }
+
+    .footer-company {
+        color: #7C3AED;
+    }
+
+    .footer-legal {
+        color: #475569;
+    }
+
+    // Scrollbar dark
+    .email-scroll-area {
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #1c2128;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #7C3AED, #9333EA);
+            border-radius: 4px;
+        }
     }
 }

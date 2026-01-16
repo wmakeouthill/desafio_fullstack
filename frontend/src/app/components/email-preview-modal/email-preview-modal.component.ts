@@ -29,6 +29,14 @@ export class EmailPreviewModalComponent {
     /** Estado de cópia */
     readonly copiado = signal(false);
 
+    /** Tema do preview (dark por padrão) */
+    readonly isDarkMode = signal(true);
+
+    /** Alterna entre tema claro e escuro */
+    toggleTheme(): void {
+        this.isDarkMode.update(v => !v);
+    }
+
     /** Dados do remetente (empresa) */
     readonly remetente = {
         nome: 'Ana Carolina Santos',
@@ -42,12 +50,12 @@ export class EmailPreviewModalComponent {
     /** Extrai o assunto do resultado da IA ou do email original */
     readonly assuntoEmail = computed(() => {
         const resultado = this.resultado();
-        
+
         // Prioridade 1: Assunto extraído pela IA
         if (resultado.assunto) {
             return `Re: ${resultado.assunto}`;
         }
-        
+
         // Prioridade 2: Tentar extrair do email original
         const original = this.emailOriginal();
         if (original) {

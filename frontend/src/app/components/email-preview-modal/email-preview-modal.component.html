@@ -1,30 +1,36 @@
 <div class="modal-backdrop" (click)="onBackdropClick($event)" (keydown.escape)="onFechar()">
-    <dialog class="modal-container" open aria-labelledby="email-modal-title">
+    <dialog class="modal-container" [class.dark-mode]="isDarkMode()" open aria-labelledby="email-modal-title">
         <!-- Header do Modal (simula cliente de email) -->
         <div class="modal-header">
             <div class="header-left">
-                <img src="https://github.com/wmakeouthill/desafio_fullstack/blob/main/frontend/public/logo_autou.png?raw=true" alt="Autou" class="header-logo" />
+                <img src="https://www.autou.io/logo-autou.png" alt="AutoU" class="header-logo" />
                 <span class="header-title">Visualização de Email</span>
             </div>
-            <button type="button" class="btn-close" (click)="onFechar()" aria-label="Fechar">
-                ✕
-            </button>
+            <div class="header-actions">
+                <button type="button" class="btn-theme" (click)="toggleTheme()"
+                    [attr.aria-label]="isDarkMode() ? 'Modo claro' : 'Modo escuro'">
+                    @if (isDarkMode()) {
+                    ☀️
+                    } @else {
+                    🌙
+                    }
+                </button>
+                <button type="button" class="btn-close" (click)="onFechar()" aria-label="Fechar">
+                    ✕
+                </button>
+            </div>
         </div>
 
         <!-- Barra de ações do email -->
         <div class="email-toolbar">
             <span class="toolbar-title">Preview da resposta</span>
-            <button
-                type="button"
-                class="btn-copiar-email"
-                (click)="copiarEmail()"
-                [class.copiado]="copiado()">
+            <button type="button" class="btn-copiar-email" (click)="copiarEmail()" [class.copiado]="copiado()">
                 @if (copiado()) {
-                    <span class="btn-icon">✓</span>
-                    <span>Copiado!</span>
+                <span class="btn-icon">✓</span>
+                <span>Copiado!</span>
                 } @else {
-                    <span class="btn-icon">📋</span>
-                    <span>Copiar Resposta</span>
+                <span class="btn-icon">📋</span>
+                <span>Copiar Resposta</span>
                 }
             </button>
         </div>
@@ -67,45 +73,45 @@
                 <div class="email-signature">
                     <div class="signature-block">
                         <div class="signature-main">
-                            <img src="https://github.com/wmakeouthill/desafio_fullstack/blob/main/frontend/public/logo_autou.png?raw=true" alt="Autou" class="signature-logo" />
+                            <img src="https://www.autou.io/logo-autou.png" alt="AutoU" class="signature-logo" />
                             <div class="signature-details">
                                 <p class="signature-name">{{ remetente.nome }}</p>
                                 <p class="signature-cargo">{{ remetente.cargo }}</p>
                                 <p class="signature-dept">{{ remetente.departamento }}</p>
+                            </div>
+                        </div>
+
+                        <div class="signature-divider"></div>
+
+                        <div class="signature-contact">
+                            <div class="contact-item">
+                                <span class="contact-icon">🏢</span>
+                                <span class="contact-text">{{ remetente.empresa }}</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-icon">✉️</span>
+                                <span class="contact-text">{{ remetente.email }}</span>
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-icon">📞</span>
+                                <span class="contact-text">{{ remetente.telefone }}</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="signature-divider"></div>
-
-                    <div class="signature-contact">
-                        <div class="contact-item">
-                            <span class="contact-icon">🏢</span>
-                            <span class="contact-text">{{ remetente.empresa }}</span>
-                        </div>
-                        <div class="contact-item">
-                            <span class="contact-icon">✉️</span>
-                            <span class="contact-text">{{ remetente.email }}</span>
-                        </div>
-                        <div class="contact-item">
-                            <span class="contact-icon">📞</span>
-                            <span class="contact-text">{{ remetente.telefone }}</span>
-                        </div>
+                    <!-- Rodapé legal -->
+                    <div class="signature-footer">
+                        <p class="footer-notice">Esta mensagem foi gerada com auxílio de inteligência artificial.</p>
+                        <p class="footer-company">
+                            <strong>Autou</strong> - Soluções Inteligentes para Comunicação
+                        </p>
+                        <p class="footer-legal">
+                            Esta mensagem pode conter informações confidenciais. Se você não for o destinatário
+                            pretendido, por favor, notifique o remetente e apague esta mensagem.
+                        </p>
                     </div>
-                </div>
-
-                <!-- Rodapé legal -->
-                <div class="signature-footer">
-                    <p class="footer-notice">Esta mensagem foi gerada com auxílio de inteligência artificial.</p>
-                    <p class="footer-company">
-                        <strong>Autou</strong> - Soluções Inteligentes para Comunicação
-                    </p>
-                    <p class="footer-legal">
-                        Esta mensagem pode conter informações confidenciais. Se você não for o destinatário
-                        pretendido, por favor, notifique o remetente e apague esta mensagem.
-                    </p>
                 </div>
             </div>
-        </div>
         </div>
     </dialog>
 </div>
