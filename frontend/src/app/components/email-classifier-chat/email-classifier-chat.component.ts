@@ -78,7 +78,7 @@ export class EmailClassifierChatComponent implements AfterViewChecked {
         // Log no console mostrando qual provider foi selecionado
         console.log(`%c🔵 [Frontend] Enviando classificação por texto`, 'color: #2196F3; font-weight: bold;');
         console.log(`   └─ Provider selecionado: ${data.provider}`);
-        
+
         // Adiciona mensagem do usuário
         const userMessage: ChatMessage = {
             id: this.gerarId(),
@@ -115,7 +115,7 @@ export class EmailClassifierChatComponent implements AfterViewChecked {
         console.log(`%c🔵 [Frontend] Enviando classificação por arquivo`, 'color: #2196F3; font-weight: bold;');
         console.log(`   ├─ Arquivo: ${data.arquivo.name}`);
         console.log(`   └─ Provider selecionado: ${data.provider}`);
-        
+
         // Adiciona mensagem do usuário com arquivo
         const userMessage: ChatMessage = {
             id: this.gerarId(),
@@ -153,7 +153,7 @@ export class EmailClassifierChatComponent implements AfterViewChecked {
         console.log(`   ├─ Modelo: ${resultado.modelo_usado}`);
         console.log(`   ├─ Categoria: ${resultado.categoria}`);
         console.log(`   └─ Confiança: ${(resultado.confianca * 100).toFixed(0)}%`);
-        
+
         this.mensagens.update(msgs =>
             msgs.map(msg =>
                 msg.id === messageId

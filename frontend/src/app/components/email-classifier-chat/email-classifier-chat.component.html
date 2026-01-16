@@ -1,34 +1,62 @@
-<div class="chat-container">
-    <!-- Header Único do App -->
-    <header class="app-header">
-        <div class="app-header-content">
-            <img src="logo_autou.png" alt="Autou" class="app-logo" />
-            <div class="header-text">
-                <h1 class="app-title">Classificador de Emails</h1>
-                <span class="app-subtitle">Equipe de Soluções de IA para Comunicação</span>
-            </div>
-            <span class="app-badge">AI-Powered</span>
+<!-- Layout Principal com Header Global -->
+<div class="app-layout">
+    <!-- Header Global AutoU (topo da página) -->
+    <header class="global-header">
+        <div class="global-header-content">
+            <a href="https://www.autou.io" target="_blank" class="header-brand">
+                <img src="https://www.autou.io/logo-autou.png" alt="AutoU" class="global-logo" />
+            </a>
+            <nav class="global-nav">
+                <span class="nav-item active">Classificador de Emails</span>
+                <span class="nav-badge">AI-Powered</span>
+            </nav>
         </div>
     </header>
 
     <!-- Container do Chat -->
-    <main class="chat-main">
-        <!-- Área de mensagens -->
-        <div class="messages-area" #messagesContainer>
-            @if (temMensagens()) {
+    <div class="chat-container">
+        <!-- Header do Chat (assistente + modelo) -->
+        <header class="chat-header">
+            <div class="chat-header-content">
+                <div class="assistant-info">
+                    <div class="assistant-avatar">
+                        <span class="assistant-icon">🤖</span>
+                    </div>
+                    <div class="assistant-details">
+                        <span class="assistant-name">Assistente AutoU</span>
+                        <span class="assistant-model">
+                            @if (providerSelecionado() === 'openai') {
+                            OpenAI • {{ providers()?.providers?.openai?.model || 'gpt-4o-mini' }}
+                            } @else {
+                            Gemini • {{ providers()?.providers?.gemini?.model || 'gemini-1.5-flash' }}
+                            }
+                        </span>
+                    </div>
+                </div>
+                <span class="chat-status">Online</span>
+            </div>
+        </header>
+
+        <!-- Área principal do Chat -->
+        <main class="chat-main">
+            <!-- Área de mensagens -->
+            <div class="messages-area" #messagesContainer>
+                @if (temMensagens()) {
                 @for (msg of mensagens(); track msg.id) {
-                    <app-chat-message [message]="msg" />
+                <app-chat-message [message]="msg" />
                 }
-            } @else {
+                } @else {
                 <!-- Empty state -->
                 <div class="empty-state">
                     <div class="empty-logo-container">
                         <span class="empty-emoji">🤖</span>
-                        <img src="logo_autou.png" alt="Autou" class="empty-logo" />
+                        <img src="https://www.autou.io/logo-autou.png" alt="AutoU" class="empty-logo" />
                     </div>
                     <h2 class="empty-title">Classificador de Emails com IA</h2>
                     <p class="empty-description">
-                        Cole o conteúdo de um email ou anexe um arquivo (.txt, .pdf, .eml, .msg, .mbox) para classificá-lo automaticamente como <strong>Produtivo</strong> ou <strong>Improdutivo</strong>.
+                        Cole o conteúdo de um email ou anexe um arquivo (.txt, .pdf, .eml, .msg, .mbox) para
+                        classificá-lo
+                        automaticamente como <strong>Produtivo</strong> ou <strong>Improdutivo</strong>.
                     </p>
                     <div class="empty-features">
                         <div class="feature">
@@ -45,16 +73,13 @@
                         </div>
                     </div>
                 </div>
-            }
-        </div>
+                }
+            </div>
 
-        <!-- Input do Chat -->
-        <app-chat-input
-            [providers]="providers()"
-            [providerSelecionado]="providerSelecionado()"
-            [carregando]="carregando()"
-            (enviarTexto)="onEnviarTexto($event)"
-            (enviarArquivo)="onEnviarArquivo($event)"
-            (providerChange)="onProviderChange($event)" />
-    </main>
+            <!-- Input do Chat -->
+            <app-chat-input [providers]="providers()" [providerSelecionado]="providerSelecionado()"
+                [carregando]="carregando()" (enviarTexto)="onEnviarTexto($event)"
+                (enviarArquivo)="onEnviarArquivo($event)" (providerChange)="onProviderChange($event)" />
+        </main>
+    </div>
 </div>

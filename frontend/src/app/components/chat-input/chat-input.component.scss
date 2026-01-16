@@ -1,19 +1,20 @@
-// Variáveis corporativas
-$primary-color: #2563eb;
-$primary-hover: #1d4ed8;
+// AutoU Dark Theme - Chat Input
+$autou-violet: #7C3AED;
+$autou-purple: #9333EA;
+$autou-orange: #F97316;
+
+// Dark Theme Colors
+$dark-bg: #0f1419;
+$dark-card: #1c2128;
+$dark-card-lighter: #252d38;
+$dark-border: #30363d;
+
 $success-color: #16a34a;
 $error-color: #dc2626;
 
-$gray-50: #f8fafc;
-$gray-100: #f1f5f9;
-$gray-200: #e2e8f0;
 $gray-300: #cbd5e1;
 $gray-400: #94a3b8;
 $gray-500: #64748b;
-$gray-600: #475569;
-$gray-700: #334155;
-$gray-800: #1e293b;
-$gray-900: #0f172a;
 
 $border-radius: 12px;
 $border-radius-sm: 8px;
@@ -23,8 +24,8 @@ $border-radius-sm: 8px;
     flex-direction: column;
     gap: 0.75rem;
     padding: 1rem 1.5rem 1.5rem;
-    background: white;
-    border-top: 1px solid $gray-200;
+    background: $dark-card;
+    border-top: 1px solid $dark-border;
 }
 
 // Erro toast
@@ -33,8 +34,8 @@ $border-radius-sm: 8px;
     align-items: center;
     gap: 0.5rem;
     padding: 0.625rem 0.875rem;
-    background: rgba($error-color, 0.1);
-    border: 1px solid rgba($error-color, 0.2);
+    background: rgba($error-color, 0.15);
+    border: 1px solid rgba($error-color, 0.3);
     border-radius: $border-radius-sm;
     animation: slideDown 0.2s ease;
 
@@ -60,7 +61,7 @@ $border-radius-sm: 8px;
         font-size: 0.75rem;
 
         &:hover {
-            background: rgba($error-color, 0.1);
+            background: rgba($error-color, 0.2);
         }
     }
 }
@@ -70,6 +71,7 @@ $border-radius-sm: 8px;
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -82,8 +84,8 @@ $border-radius-sm: 8px;
     align-items: center;
     gap: 0.5rem;
     padding: 0.625rem 0.875rem;
-    background: $gray-50;
-    border: 1px solid $gray-200;
+    background: $dark-card-lighter;
+    border: 1px solid $dark-border;
     border-radius: $border-radius-sm;
 
     .arquivo-icon {
@@ -92,7 +94,7 @@ $border-radius-sm: 8px;
 
     .arquivo-nome {
         font-weight: 500;
-        color: $gray-800;
+        color: white;
         font-size: 0.875rem;
     }
 
@@ -107,15 +109,14 @@ $border-radius-sm: 8px;
         height: 20px;
         border: none;
         border-radius: 50%;
-        background: $gray-300;
-        color: $gray-600;
+        background: $gray-500;
+        color: white;
         font-size: 0.75rem;
         cursor: pointer;
         transition: all 0.2s ease;
 
         &:hover {
             background: $error-color;
-            color: white;
         }
     }
 }
@@ -126,14 +127,15 @@ $border-radius-sm: 8px;
     align-items: flex-end;
     gap: 0.75rem;
     padding: 0.75rem;
-    background: $gray-50;
-    border: 2px solid $gray-200;
+    background: $dark-bg;
+    border: 2px solid $dark-border;
     border-radius: $border-radius;
-    transition: border-color 0.2s ease;
+    transition: all 0.2s ease;
 
     &:focus-within {
-        border-color: $primary-color;
-        background: white;
+        border-color: $autou-violet;
+        background: $dark-card-lighter;
+        box-shadow: 0 0 0 4px rgba($autou-violet, 0.15);
     }
 }
 
@@ -148,13 +150,13 @@ $border-radius-sm: 8px;
     border: none;
     border-radius: $border-radius-sm;
     background: transparent;
-    color: $gray-500;
+    color: $gray-400;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover:not(:disabled) {
-        background: $gray-200;
-        color: $gray-700;
+        background: rgba($autou-violet, 0.2);
+        color: $autou-violet;
     }
 
     &:disabled {
@@ -175,14 +177,14 @@ $border-radius-sm: 8px;
     font-size: 0.9375rem;
     line-height: 1.5;
     resize: none;
-    color: $gray-900;
+    color: white;
 
     &:focus {
         outline: none;
     }
 
     &::placeholder {
-        color: $gray-400;
+        color: $gray-500;
     }
 
     &:disabled {
@@ -194,7 +196,7 @@ $border-radius-sm: 8px;
     flex: 1;
     min-height: 40px;
     padding: 0.5rem 0;
-    color: $gray-400;
+    color: $gray-500;
     font-size: 0.9375rem;
     display: flex;
     align-items: center;
@@ -203,7 +205,7 @@ $border-radius-sm: 8px;
 .arquivo-placeholder {
     flex: 1;
     padding: 0.5rem 0;
-    color: $gray-600;
+    color: $gray-300;
     font-size: 0.9375rem;
 }
 
@@ -225,18 +227,18 @@ $border-radius-sm: 8px;
     align-items: center;
     gap: 0.375rem;
     padding: 0.5rem 0.75rem;
-    border: 1px solid $gray-300;
+    border: 1px solid $dark-border;
     border-radius: $border-radius-sm;
-    background: white;
-    color: $gray-700;
+    background: $dark-card-lighter;
+    color: $gray-300;
     font-size: 0.8125rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover:not(:disabled) {
-        border-color: $primary-color;
-        color: $primary-color;
+        border-color: $autou-violet;
+        color: white;
     }
 
     &:disabled {
@@ -267,12 +269,12 @@ $border-radius-sm: 8px;
     position: absolute;
     bottom: calc(100% + 8px);
     right: 0;
-    min-width: 240px;
+    min-width: 280px;
     padding: 0.5rem;
-    background: white;
-    border: 1px solid $gray-200;
+    background: $dark-card;
+    border: 1px solid $dark-border;
     border-radius: $border-radius-sm;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     z-index: 100;
     animation: fadeInUp 0.15s ease;
 }
@@ -282,6 +284,7 @@ $border-radius-sm: 8px;
         opacity: 0;
         transform: translateY(8px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -298,15 +301,15 @@ $border-radius-sm: 8px;
     border-radius: 6px;
     background: transparent;
     cursor: pointer;
-    transition: background 0.15s ease;
+    transition: all 0.15s ease;
     text-align: left;
 
     &:hover:not(.disabled) {
-        background: $gray-50;
+        background: $dark-card-lighter;
     }
 
     &.active {
-        background: rgba($primary-color, 0.08);
+        background: rgba($autou-violet, 0.15);
     }
 
     &.disabled {
@@ -328,7 +331,7 @@ $border-radius-sm: 8px;
 
     .option-label {
         font-weight: 600;
-        color: $gray-900;
+        color: white;
         font-size: 0.875rem;
     }
 
@@ -339,48 +342,64 @@ $border-radius-sm: 8px;
 
     .option-fallback {
         font-size: 0.6875rem;
-        color: $gray-400;
+        color: $gray-500;
         font-style: italic;
     }
 
     .check-icon {
-        color: $primary-color;
+        color: $autou-violet;
         font-weight: 600;
     }
 
     .unavailable-badge {
         font-size: 0.6875rem;
         color: $error-color;
-        background: rgba($error-color, 0.1);
+        background: rgba($error-color, 0.15);
         padding: 0.125rem 0.375rem;
         border-radius: 4px;
     }
 }
 
-// Botão enviar
+// Botão enviar - AutoU Gradient Style
 .btn-enviar {
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     border-radius: $border-radius-sm;
-    background: $primary-color;
+    background: linear-gradient(135deg, $autou-violet 0%, $autou-purple 50%, $autou-orange 100%);
     color: white;
     cursor: pointer;
     transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
 
     &:hover:not(:disabled) {
-        background: $primary-hover;
         transform: scale(1.05);
+        box-shadow: 0 4px 20px rgba($autou-violet, 0.5);
+
+        &::before {
+            opacity: 1;
+        }
     }
 
     &:disabled {
         opacity: 0.4;
         cursor: not-allowed;
         transform: none;
+        box-shadow: none;
     }
 }
 
@@ -413,8 +432,8 @@ $border-radius-sm: 8px;
 
     .btn-anexo,
     .btn-enviar {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
     }
 
     .btn-provider {
@@ -427,6 +446,6 @@ $border-radius-sm: 8px;
 
     .provider-menu {
         right: -40px;
-        min-width: 220px;
+        min-width: 260px;
     }
 }

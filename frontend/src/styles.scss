@@ -1,4 +1,41 @@
-/* Global Styles - Email Classifier */
+/* Global Styles - AutoU Design System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* AutoU Design Tokens */
+:root {
+  /* Primary Gradient Colors */
+  --autou-violet: #7C3AED;
+  --autou-purple: #9333EA;
+  --autou-orange: #F97316;
+  
+  /* Dark Theme */
+  --autou-dark: #0a0b14;
+  --autou-dark-secondary: #111827;
+  --autou-dark-surface: #1F2937;
+  --autou-dark-border: #374151;
+  
+  /* Grays */
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(to right, #7C3AED, #9333EA, #F97316);
+  --gradient-subtle: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(249, 115, 22, 0.1) 100%);
+  --gradient-vignette: radial-gradient(ellipse at center, transparent 50%, rgba(99, 102, 241, 0.15) 100%);
+  
+  /* Status Colors */
+  --success: #16a34a;
+  --warning: #ca8a04;
+  --error: #dc2626;
+}
 
 * {
   margin: 0;
@@ -13,10 +50,32 @@ html, body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  color: #0f172a;
-  background: #f1f5f9;
+  color: var(--gray-900);
+  background: var(--gray-100);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Vignette Effect Container */
+.vignette-effect {
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: var(--gradient-vignette);
+    z-index: 9999;
+  }
+}
+
+/* Gradient Text Utility */
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Scrollbar */
@@ -26,28 +85,28 @@ html, body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--gray-100);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: linear-gradient(180deg, var(--autou-violet), var(--autou-purple));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: linear-gradient(180deg, var(--autou-purple), var(--autou-orange));
 }
 
 /* Focus styles */
 :focus-visible {
-  outline: 2px solid #2563eb;
+  outline: 2px solid var(--autou-violet);
   outline-offset: 2px;
 }
 
 /* Selection */
 ::selection {
-  background: rgba(37, 99, 235, 0.2);
+  background: rgba(124, 58, 237, 0.2);
 }
 
 /* Button reset */
@@ -58,4 +117,35 @@ button {
 /* Textarea auto-resize helper */
 textarea {
   field-sizing: content;
+}
+
+/* Premium Button Styles */
+.btn-gradient {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(255,255,255,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  &:hover::before {
+    opacity: 1;
+  }
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+  }
 }
