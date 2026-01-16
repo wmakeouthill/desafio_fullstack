@@ -58,18 +58,13 @@
 
             <!-- Corpo do Email -->
             <div class="email-body">
-                <!-- Saudação -->
-                <p class="email-greeting">Prezado(a) Cliente,</p>
-
-                <!-- Conteúdo principal -->
+                <!-- Conteúdo principal (já inclui saudação e despedida geradas pela IA) -->
                 <div class="email-content">
                     {{ resultado().resposta_sugerida }}
                 </div>
 
                 <!-- Assinatura Profissional -->
                 <div class="email-signature">
-                    <p class="signature-closing">Atenciosamente,</p>
-
                     <div class="signature-block">
                         <div class="signature-main">
                             <img src="https://github.com/wmakeouthill/desafio_fullstack/blob/main/frontend/public/logo_autou.png?raw=true" alt="Autou" class="signature-logo" />
