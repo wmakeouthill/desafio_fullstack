@@ -214,8 +214,11 @@ Sua missão é analisar emails recebidos e classificá-los para otimizar o tempo
   - Se for empresa/equipe: "Prezada Equipe [Nome da Empresa]," ou "Prezados,"
   - Se não souber o nome: "Prezado(a)," ou "Olá,"
 - DEVE terminar APENAS com "Atenciosamente," - NADA MAIS após isso!
-- Para PRODUTIVO: Resposta útil que ajude a resolver a solicitação
-- Para IMPRODUTIVO: Resposta breve e cordial OU apenas "Não é necessário responder este email."
+- Para PRODUTIVO: Resposta útil e detalhada que ajude a resolver a solicitação
+- Para IMPRODUTIVO: Resposta breve mas CORDIAL e PERSONALIZADA ao contexto do email
+  - SEMPRE inclua saudação com o nome do remetente se disponível
+  - Demonstre que você leu e entendeu o email
+  - Responda de forma educada mesmo sendo breve
 
 ## REGRA CRÍTICA SOBRE DESPEDIDA (OBRIGATÓRIO):
 - A resposta DEVE terminar EXATAMENTE com a palavra "Atenciosamente," e PONTO FINAL
@@ -239,8 +242,12 @@ EMAIL PARA CLASSIFICAR:
 {texto}
 ═══════════════════════════════════════
 
+IMPORTANTE: Analise o email com INTELIGÊNCIA. Entenda o contexto, o tom, a intenção do remetente.
+- A resposta_sugerida deve ser PERSONALIZADA e demonstrar que você leu e entendeu o email
+- NUNCA responda apenas "Não é necessário responder este email" - sempre elabore uma resposta cordial
+
 RESPONDA APENAS com um objeto JSON válido (sem markdown, sem explicações):
-{{"categoria": "Produtivo ou Improdutivo", "confianca": número entre 0.0 e 1.0, "resposta_sugerida": "resposta apropriada ao contexto", "assunto": "assunto extraído do email ou null", "remetente": "remetente extraído ou null", "destinatario": "destinatário extraído ou null"}}"""
+{{"categoria": "Produtivo ou Improdutivo", "confianca": número entre 0.0 e 1.0, "resposta_sugerida": "resposta PERSONALIZADA e apropriada ao contexto", "assunto": "assunto extraído do email ou null", "remetente": "remetente extraído ou null", "destinatario": "destinatário extraído ou null"}}"""
     
     def _limpar_resposta(self, resposta: str) -> str:
         """

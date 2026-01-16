@@ -46,7 +46,7 @@ export class ChatMessageComponent {
     );
 
     readonly providerLabel = computed(() =>
-        this.message().provider === 'gemini' ? 'Gemini' : 'OpenAI'
+        this.message().provider === 'gemini' ? 'Gemini - Assistente AutoU' : 'OpenAI - Assistente AutoU'
     );
 
     readonly modeloUsado = computed(() =>

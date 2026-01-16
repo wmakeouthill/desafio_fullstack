@@ -206,8 +206,12 @@ Sua missão é analisar emails recebidos e classificá-los para otimizar o tempo
   - Se for empresa/equipe: "Prezada Equipe [Nome da Empresa]," ou "Prezados,"
   - Se não souber o nome: "Prezado(a)," ou "Olá,"
 - DEVE terminar APENAS com "Atenciosamente," - NADA MAIS após isso!
-- Para PRODUTIVO: Resposta útil que ajude a resolver a solicitação
-- Para IMPRODUTIVO: Resposta breve e cordial OU apenas "Não é necessário responder este email."
+- Para PRODUTIVO: Resposta útil e detalhada que ajude a resolver a solicitação
+- Para IMPRODUTIVO: Resposta breve mas CORDIAL e PERSONALIZADA ao contexto do email
+  - SEMPRE inclua saudação com o nome do remetente se disponível
+  - Demonstre que você leu e entendeu o email
+  - Responda de forma educada mesmo sendo breve
+  - NUNCA use a frase "Não é necessário responder este email"
 
 ## REGRA CRÍTICA SOBRE DESPEDIDA (OBRIGATÓRIO):
 - A resposta DEVE terminar EXATAMENTE com a palavra "Atenciosamente," e PONTO FINAL
@@ -234,6 +238,11 @@ EMAIL RECEBIDO:
 ═══════════════════════════════════════
 {texto}
 ═══════════════════════════════════════
+
+IMPORTANTE: 
+- A resposta_sugerida deve ser PERSONALIZADA e demonstrar que você leu e entendeu o email
+- NUNCA responda apenas "Não é necessário responder este email" - sempre elabore uma resposta cordial
+- Mesmo para emails Improdutivos, crie uma resposta educada e contextualizada
 
 Retorne sua análise em JSON com:
 - Classificação inteligente (lembre: críticas construtivas, elogios, feedback = PRODUTIVO)
