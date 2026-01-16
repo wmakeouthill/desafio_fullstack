@@ -120,25 +120,8 @@ export class EmailPreviewModalComponent {
         }
     }
 
-    /** Gera o texto completo do email para cópia */
+    /** Gera o texto da resposta para cópia - apenas o conteúdo, sem saudação nem assinatura */
     gerarEmailTexto(): string {
-        return `${this.resultado().resposta_sugerida}
-
---
-Atenciosamente,
-
-${this.remetente.nome}
-${this.remetente.cargo}
-${this.remetente.departamento}
-
-${this.remetente.empresa}
-E-mail: ${this.remetente.email}
-Tel: ${this.remetente.telefone}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Esta mensagem foi gerada com auxílio de IA.
-Autou - Soluções Inteligentes para Comunicação
-www.autou.com.br
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
+        return this.resultado().resposta_sugerida;
     }
 }

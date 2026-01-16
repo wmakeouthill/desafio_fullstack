@@ -3,7 +3,7 @@
         <!-- Header do Modal (simula cliente de email) -->
         <div class="modal-header">
             <div class="header-left">
-                <img src="logo_autou.png" alt="Autou" class="header-logo" />
+                <img src="https://github.com/wmakeouthill/desafio_fullstack/blob/main/frontend/public/logo_autou.png?raw=true" alt="Autou" class="header-logo" />
                 <span class="header-title">Visualização de Email</span>
             </div>
             <button type="button" class="btn-close" (click)="onFechar()" aria-label="Fechar">
@@ -13,20 +13,7 @@
 
         <!-- Barra de ações do email -->
         <div class="email-toolbar">
-            <div class="toolbar-actions">
-                <button type="button" class="toolbar-btn" title="Responder">
-                    <span class="toolbar-icon">↩️</span>
-                    <span class="toolbar-label">Responder</span>
-                </button>
-                <button type="button" class="toolbar-btn" title="Encaminhar">
-                    <span class="toolbar-icon">➡️</span>
-                    <span class="toolbar-label">Encaminhar</span>
-                </button>
-                <button type="button" class="toolbar-btn" title="Arquivar">
-                    <span class="toolbar-icon">📁</span>
-                    <span class="toolbar-label">Arquivar</span>
-                </button>
-            </div>
+            <span class="toolbar-title">Preview da resposta</span>
             <button
                 type="button"
                 class="btn-copiar-email"
@@ -37,7 +24,7 @@
                     <span>Copiado!</span>
                 } @else {
                     <span class="btn-icon">📋</span>
-                    <span>Copiar Email</span>
+                    <span>Copiar Resposta</span>
                 }
             </button>
         </div>
@@ -85,7 +72,7 @@
 
                     <div class="signature-block">
                         <div class="signature-main">
-                            <img src="logo_autou.png" alt="Autou" class="signature-logo" />
+                            <img src="https://github.com/wmakeouthill/desafio_fullstack/blob/main/frontend/public/logo_autou.png?raw=true" alt="Autou" class="signature-logo" />
                             <div class="signature-details">
                                 <p class="signature-name">{{ remetente.nome }}</p>
                                 <p class="signature-cargo">{{ remetente.cargo }}</p>

@@ -45,7 +45,7 @@
                     [ngModel]="conteudoEmail()"
                     (ngModelChange)="conteudoEmail.set($event)"
                     (keydown)="onKeydown($event)"
-                    placeholder="Cole o conteúdo do email aqui..."
+                    placeholder="Cole o conteúdo do email aqui... ou anexe no botão à esquerda"
                     rows="1"
                     [disabled]="carregando()"></textarea>
             } @else {
