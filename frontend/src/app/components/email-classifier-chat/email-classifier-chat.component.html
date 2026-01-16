@@ -78,8 +78,9 @@
 
             <!-- Input do Chat -->
             <app-chat-input [providers]="providers()" [providerSelecionado]="providerSelecionado()"
-                [carregando]="carregando()" (enviarTexto)="onEnviarTexto($event)"
-                (enviarArquivo)="onEnviarArquivo($event)" (providerChange)="onProviderChange($event)" />
+                [carregando]="carregando()" [temMensagens]="temMensagens()" (enviarTexto)="onEnviarTexto($event)"
+                (enviarArquivo)="onEnviarArquivo($event)" (providerChange)="onProviderChange($event)"
+                (novoChat)="onNovoChat()" />
         </main>
     </div>
 </div>

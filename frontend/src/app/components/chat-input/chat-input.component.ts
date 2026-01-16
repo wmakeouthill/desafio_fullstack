@@ -27,11 +27,13 @@ export class ChatInputComponent {
     readonly providers = input<ProvidersResponse | null>(null);
     readonly providerSelecionado = input<AIProvider>('openai');
     readonly carregando = input(false);
+    readonly temMensagens = input(false);
 
     // Outputs
     readonly enviarTexto = output<{ conteudo: string; provider: AIProvider }>();
     readonly enviarArquivo = output<{ arquivo: File; provider: AIProvider }>();
     readonly providerChange = output<AIProvider>();
+    readonly novoChat = output<void>();
 
     // State
     readonly conteudoEmail = signal('');
@@ -175,5 +177,12 @@ export class ChatInputComponent {
             event.preventDefault();
             this.enviar();
         }
+    }
+
+    iniciarNovoChat(): void {
+        this.novoChat.emit();
+        this.conteudoEmail.set('');
+        this.arquivoSelecionado.set(null);
+        this.erro.set(null);
     }
 }

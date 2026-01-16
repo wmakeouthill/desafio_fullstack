@@ -19,7 +19,21 @@
     }
 
     <div class="input-wrapper">
-        <!-- Botão de arquivo (esquerda) -->
+        <!-- Botão novo chat (esquerda) -->
+        @if (temMensagens()) {
+            <button
+                type="button"
+                class="btn-novo-chat"
+                (click)="iniciarNovoChat()"
+                title="Iniciar novo chat (isso irá apagar a sessão atual)"
+                [disabled]="carregando()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+            </button>
+        }
+
+        <!-- Botão de arquivo -->
         <input
             type="file"
             accept=".txt,.pdf,.eml,.msg,.mbox"

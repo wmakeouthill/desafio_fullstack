@@ -139,6 +139,32 @@ $border-radius-sm: 8px;
     }
 }
 
+// Botão novo chat
+.btn-novo-chat {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: $border-radius-sm;
+    background: transparent;
+    color: $gray-400;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+        background: rgba($autou-orange, 0.2);
+        color: $autou-orange;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
 // Botão anexo
 .btn-anexo {
     flex-shrink: 0;

@@ -5,11 +5,14 @@
  * mensagens e comunicação com a API.
  */
 
-import { Component, inject, signal, computed, ChangeDetectionStrategy, ElementRef, viewChild, AfterViewChecked } from '@angular/core';
+import { Component, inject, signal, computed, ChangeDetectionStrategy, ElementRef, viewChild, AfterViewChecked, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { EmailService } from '../../services/email.service';
 import { ClassificacaoResultado, AIProvider, ProvidersResponse } from '../../models';
 import { ChatMessageComponent, ChatMessage } from '../chat-message/chat-message.component';
 import { ChatInputComponent } from '../chat-input/chat-input.component';
+
+const CHAT_STORAGE_KEY = 'autou-email-classifier-chat-history';
 
 @Component({
     selector: 'app-email-classifier-chat',
@@ -21,6 +24,8 @@ import { ChatInputComponent } from '../chat-input/chat-input.component';
 })
 export class EmailClassifierChatComponent implements AfterViewChecked {
     private readonly emailService = inject(EmailService);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly isBrowser = isPlatformBrowser(this.platformId);
 
     // ViewChild para scroll
     readonly messagesContainer = viewChild<ElementRef>('messagesContainer');
@@ -38,6 +43,63 @@ export class EmailClassifierChatComponent implements AfterViewChecked {
 
     constructor() {
         this.carregarProviders();
+        this.carregarHistoricoChat();
+    }
+
+    /**
+     * Carrega o histórico do chat do localStorage
+     */
+    private carregarHistoricoChat(): void {
+        if (!this.isBrowser) return;
+
+        try {
+            const stored = localStorage.getItem(CHAT_STORAGE_KEY);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                // Restaura os timestamps como objetos Date
+                const mensagens = parsed.map((msg: any) => ({
+                    ...msg,
+                    timestamp: new Date(msg.timestamp)
+                }));
+                this.mensagens.set(mensagens);
+                // Atualiza o contador de IDs baseado nas mensagens existentes
+                if (mensagens.length > 0) {
+                    const maxId = Math.max(...mensagens.map((m: ChatMessage) => {
+                        const match = m.id.match(/msg-(\d+)-/);
+                        return match ? parseInt(match[1], 10) : 0;
+                    }));
+                    this.messageIdCounter = maxId;
+                }
+                this.shouldScrollToBottom = true;
+            }
+        } catch (error) {
+            console.error('Erro ao carregar histórico do chat:', error);
+        }
+    }
+
+    /**
+     * Salva o histórico do chat no localStorage
+     */
+    private salvarHistoricoChat(): void {
+        if (!this.isBrowser) return;
+
+        try {
+            const mensagens = this.mensagens();
+            localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(mensagens));
+        } catch (error) {
+            console.error('Erro ao salvar histórico do chat:', error);
+        }
+    }
+
+    /**
+     * Inicia um novo chat, limpando o histórico
+     */
+    onNovoChat(): void {
+        this.mensagens.set([]);
+        this.messageIdCounter = 0;
+        if (this.isBrowser) {
+            localStorage.removeItem(CHAT_STORAGE_KEY);
+        }
     }
 
     ngAfterViewChecked(): void {
@@ -98,6 +160,7 @@ export class EmailClassifierChatComponent implements AfterViewChecked {
         };
 
         this.mensagens.update(msgs => [...msgs, userMessage, aiLoadingMessage]);
+        this.salvarHistoricoChat();
         this.carregando.set(true);
         this.shouldScrollToBottom = true;
 
@@ -137,6 +200,7 @@ export class EmailClassifierChatComponent implements AfterViewChecked {
         };
 
         this.mensagens.update(msgs => [...msgs, userMessage, aiLoadingMessage]);
+        this.salvarHistoricoChat();
         this.carregando.set(true);
         this.shouldScrollToBottom = true;
 
@@ -161,6 +225,7 @@ export class EmailClassifierChatComponent implements AfterViewChecked {
                     : msg
             )
         );
+        this.salvarHistoricoChat();
         this.carregando.set(false);
         this.shouldScrollToBottom = true;
     }
@@ -184,6 +249,7 @@ export class EmailClassifierChatComponent implements AfterViewChecked {
                     : msg
             )
         );
+        this.salvarHistoricoChat();
         this.carregando.set(false);
     }
 }
