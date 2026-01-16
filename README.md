@@ -1,4 +1,4 @@
-# 📧 Email Classifier - Classificador de Emails com IA
+# 📧 AutoU - Email Helper
 
 > Aplicação web fullstack para classificação automática de emails usando Inteligência Artificial.
 
@@ -6,6 +6,14 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-green.svg)](https://fastapi.tiangolo.com/)
 [![Angular](https://img.shields.io/badge/Angular-20+-red.svg)](https://angular.io/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+[![Google Cloud Run](https://img.shields.io/badge/Cloud%20Run-Deployed-4285F4.svg)](https://cloud.google.com/run)
+[![Vercel](https://img.shields.io/badge/Vercel-Deployed-black.svg)](https://vercel.com/)
+
+## 🌐 Demo em Produção
+
+- **Frontend (Vercel)**: [https://email-classifier-frontend-delta.vercel.app](https://email-classifier-frontend-delta.vercel.app)
+- **Backend (Cloud Run)**: [https://email-classifier-api-881402891442.southamerica-east1.run.app](https://email-classifier-api-881402891442.southamerica-east1.run.app)
+- **API Docs**: [https://email-classifier-api-881402891442.southamerica-east1.run.app/docs](https://email-classifier-api-881402891442.southamerica-east1.run.app/docs)
 
 ---
 
@@ -73,6 +81,30 @@ Solução digital para empresas do setor financeiro que lidam com alto volume de
 
 - **Docker** - Containerização
 - **Docker Compose** - Orquestração de containers
+- **Google Cloud Run** - Deploy do backend (São Paulo - southamerica-east1)
+- **Vercel** - Deploy do frontend com CDN global
+- **Google Secret Manager** - Gerenciamento seguro de API keys
+
+---
+
+## 🤖 Modelos de IA Suportados
+
+### OpenAI (Padrão)
+
+| Modelo | Descrição | Max Tokens |
+|--------|-----------|------------|
+| `gpt-4o-mini` | Modelo principal - rápido e eficiente | 4.000 |
+| `gpt-3.5-turbo` | Fallback - menor custo | 4.000 |
+
+### Google Gemini
+
+| Modelo | Descrição | Max Tokens |
+|--------|-----------|------------|
+| `gemini-2.5-flash` | Modelo principal - alta performance | 8.192 |
+| `gemini-2.0-flash` | Fallback primário | 8.192 |
+| `gemini-2.0-flash-lite` | Fallback secundário - mais leve | 8.192 |
+
+> **Nota:** O sistema possui fallback automático - se o modelo principal falhar, tenta automaticamente os modelos de fallback.
 
 ---
 
@@ -497,6 +529,9 @@ DEBUG=false
 - ✅ **Docker Compose**: Configuração completa para desenvolvimento e produção
 - ✅ **Hot Reload**: Desenvolvimento com recarregamento automático (backend e frontend)
 - ✅ **Health Checks**: Monitoramento automático dos containers
+- ✅ **Deploy Cloud Run**: Backend rodando no Google Cloud Run (São Paulo)
+- ✅ **Deploy Vercel**: Frontend com CDN global e proxy para o backend
+- ✅ **Secrets Management**: Chaves de API gerenciadas pelo Google Secret Manager
 
 ## 📝 Melhorias Futuras
 
@@ -505,10 +540,61 @@ DEBUG=false
 - [ ] Adicionar autenticação e autorização
 - [ ] Implementar histórico persistente de classificações
 - [ ] Adicionar dashboard de métricas e analytics
-- [ ] Configurar CI/CD
-- [ ] Deploy na nuvem (AWS, GCP, Azure)
+- [ ] Configurar CI/CD com GitHub Actions
 - [ ] Suporte a mais formatos de arquivo (docx, odt, etc.)
 - [ ] Exportação de resultados (CSV, JSON)
+
+---
+
+## ☁️ Deploy em Produção
+
+### Infraestrutura Atual
+
+| Componente | Plataforma | Região | URL |
+|------------|------------|--------|-----|
+| **Frontend** | Vercel | CDN Global | [email-classifier-frontend-delta.vercel.app](https://email-classifier-frontend-delta.vercel.app) |
+| **Backend** | Google Cloud Run | São Paulo (southamerica-east1) | [email-classifier-api-881402891442.southamerica-east1.run.app](https://email-classifier-api-881402891442.southamerica-east1.run.app) |
+| **Secrets** | Google Secret Manager | - | Chaves OpenAI e Gemini |
+
+### Deploy do Backend (Cloud Run)
+
+```bash
+cd backend
+
+# Build e deploy
+gcloud run deploy email-classifier-api \
+    --source . \
+    --region southamerica-east1 \
+    --port 8000 \
+    --memory 512Mi --cpu 1 --max-instances 1 \
+    --allow-unauthenticated \
+    --set-secrets "OPENAI_API_KEY=openai-api-key:latest,GEMINI_API_KEY=gemini-api-key:latest"
+
+# Permitir acesso público
+gcloud run services add-iam-policy-binding email-classifier-api \
+    --region=southamerica-east1 \
+    --member="allUsers" \
+    --role="roles/run.invoker"
+
+# Configurar CORS
+gcloud run services update email-classifier-api \
+    --region southamerica-east1 \
+    --update-env-vars "^@^CORS_ORIGINS=http://localhost:4200,https://email-classifier-frontend-delta.vercel.app"
+```
+
+### Deploy do Frontend (Vercel)
+
+```bash
+cd frontend
+
+# Build
+npm run build
+
+# Deploy
+vercel --prod
+```
+
+> Para mais detalhes, consulte o arquivo [DEPLOY.md](DEPLOY.md).
 
 ---
 
@@ -545,7 +631,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ## 👥 Autor
 
-Desenvolvido como parte do desafio técnico fullstack.
+Desenvolvido como parte do desafio técnico fullstack para a **AutoU**.
 
 ## 📚 Recursos Adicionais
 
@@ -554,3 +640,5 @@ Desenvolvido como parte do desafio técnico fullstack.
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
 - [OpenAI API](https://platform.openai.com/docs)
 - [Google Gemini API](https://ai.google.dev/docs)
+- [Google Cloud Run](https://cloud.google.com/run/docs)
+- [Vercel Documentation](https://vercel.com/docs)
