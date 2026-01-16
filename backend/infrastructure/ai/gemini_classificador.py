@@ -32,7 +32,7 @@ class GeminiClassificador(ClassificadorPort):
         self,
         api_key: str,
         preprocessador: Optional[PreprocessadorTexto] = None,
-        modelo: str = "gemini-2.5-flash-preview-05-20",
+        modelo: str = "gemini-2.5-flash",
         max_tokens: int = 8192
     ):
         """

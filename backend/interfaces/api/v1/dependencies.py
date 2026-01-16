@@ -99,11 +99,15 @@ def get_available_providers() -> dict:
         "providers": {
             "openai": {
                 "available": bool(settings.openai_api_key),
-                "model": settings.openai_model
+                "model": settings.openai_model,
+                "fallback_models": settings.openai_fallback_list,
+                "max_tokens": settings.openai_max_tokens
             },
             "gemini": {
                 "available": bool(settings.gemini_api_key),
-                "model": settings.gemini_model
+                "model": settings.gemini_model,
+                "fallback_models": settings.gemini_fallback_list,
+                "max_tokens": settings.gemini_max_tokens
             }
         }
     }

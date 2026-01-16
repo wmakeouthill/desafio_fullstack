@@ -337,6 +337,12 @@ $border-radius-sm: 8px;
         color: $gray-500;
     }
 
+    .option-fallback {
+        font-size: 0.6875rem;
+        color: $gray-400;
+        font-style: italic;
+    }
+
     .check-icon {
         color: $primary-color;
         font-weight: 600;

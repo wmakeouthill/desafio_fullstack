@@ -92,6 +92,9 @@
                                 <div class="option-content">
                                     <span class="option-label">{{ p.label }}</span>
                                     <span class="option-model">{{ p.model }}</span>
+                                    @if (p.fallback_models && p.fallback_models.length > 0) {
+                                        <span class="option-fallback">Fallback: {{ p.fallback_models.join(', ') }}</span>
+                                    }
                                 </div>
                                 @if (providerSelecionado() === p.value) {
                                     <span class="check-icon">✓</span>

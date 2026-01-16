@@ -227,22 +227,28 @@ A API RESTful está documentada automaticamente em `/docs` (Swagger UI) e `/redo
 #### 1. Listar Provedores de IA
 
 **Request:**
+
 ```bash
 curl -X GET "http://localhost:8000/api/v1/emails/providers"
 ```
 
 **Response:**
+
 ```json
 {
   "default": "openai",
   "providers": {
     "openai": {
       "available": true,
-      "model": "gpt-3.5-turbo"
+      "model": "gpt-4o-mini",
+      "fallback_models": ["gpt-3.5-turbo"],
+      "max_tokens": 4000
     },
     "gemini": {
       "available": true,
-      "model": "gemini-1.5-flash"
+      "model": "gemini-2.5-flash",
+      "fallback_models": ["gemini-2.0-flash", "gemini-2.0-flash-lite"],
+      "max_tokens": 8192
     }
   }
 }
@@ -251,6 +257,7 @@ curl -X GET "http://localhost:8000/api/v1/emails/providers"
 #### 2. Classificar por Texto
 
 **Request:**
+
 ```bash
 curl -X POST "http://localhost:8000/api/v1/emails/classificar" \
   -H "Content-Type: application/json" \
@@ -263,6 +270,7 @@ curl -X POST "http://localhost:8000/api/v1/emails/classificar" \
 > **Nota:** O parâmetro `provider` é opcional. Se não fornecido, será usado o provider padrão configurado.
 
 **Response:**
+
 ```json
 {
   "categoria": "Produtivo",
@@ -274,12 +282,14 @@ curl -X POST "http://localhost:8000/api/v1/emails/classificar" \
 #### 3. Classificar por Arquivo
 
 **Request:**
+
 ```bash
 curl -X POST "http://localhost:8000/api/v1/emails/classificar/arquivo?provider=gemini" \
   -F "arquivo=@email.eml"
 ```
 
 **Response:**
+
 ```json
 {
   "categoria": "Improdutivo",
@@ -290,7 +300,7 @@ curl -X POST "http://localhost:8000/api/v1/emails/classificar/arquivo?provider=g
 ```
 
 > **Formatos Suportados:** `.txt`, `.pdf`, `.eml`, `.msg` (Outlook), `.mbox`
-> 
+>
 > **Tamanho Máximo:** 5MB por arquivo
 
 ### Documentação Interativa
@@ -425,8 +435,12 @@ Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 | `OPENAI_API_KEY` | Chave da API OpenAI | - | Sim* |
 | `GEMINI_API_KEY` | Chave da API Google Gemini | - | Sim* |
 | `AI_PROVIDER` | Provedor de IA: `openai` ou `gemini` | `openai` | Não |
-| `OPENAI_MODEL` | Modelo da OpenAI a usar | `gpt-3.5-turbo` | Não |
-| `GEMINI_MODEL` | Modelo do Gemini a usar | `gemini-1.5-flash` | Não |
+| `OPENAI_MODEL` | Modelo da OpenAI a usar | `gpt-4o-mini` | Não |
+| `OPENAI_MODELS_FALLBACK` | Modelos de fallback OpenAI | `gpt-3.5-turbo` | Não |
+| `OPENAI_MAX_TOKENS` | Máximo de tokens OpenAI | `4000` | Não |
+| `GEMINI_MODEL` | Modelo do Gemini a usar | `gemini-2.5-flash` | Não |
+| `GEMINI_MODELS_FALLBACK` | Modelos de fallback Gemini | `gemini-2.0-flash,gemini-2.0-flash-lite` | Não |
+| `GEMINI_MAX_TOKENS` | Máximo de tokens Gemini | `8192` | Não |
 | `CORS_ORIGINS` | Origens permitidas (separadas por vírgula) | `http://localhost:4200,http://localhost:3000` | Não |
 | `DEBUG` | Modo debug | `false` | Não |
 
@@ -440,11 +454,15 @@ AI_PROVIDER=openai
 
 # OpenAI (obrigatório se AI_PROVIDER=openai)
 OPENAI_API_KEY=sk-proj-xxxxxxxxxxxxxxxxxxxxxxxx
-OPENAI_MODEL=gpt-3.5-turbo
+OPENAI_MODEL=gpt-4o-mini
+OPENAI_MODELS_FALLBACK=gpt-3.5-turbo
+OPENAI_MAX_TOKENS=4000
 
 # Google Gemini (obrigatório se AI_PROVIDER=gemini)
 GEMINI_API_KEY=AIzaSyxxxxxxxxxxxxxxxxxxxxx
-GEMINI_MODEL=gemini-1.5-flash
+GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODELS_FALLBACK=gemini-2.0-flash,gemini-2.0-flash-lite
+GEMINI_MAX_TOKENS=8192
 
 # CORS
 CORS_ORIGINS=http://localhost:4200,http://localhost:3000

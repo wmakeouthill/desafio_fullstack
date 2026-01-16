@@ -51,6 +51,10 @@ class Settings(BaseSettings):
         default="gpt-4o-mini",
         description="Modelo da OpenAI a ser usado"
     )
+    openai_models_fallback: str = Field(
+        default="gpt-3.5-turbo",
+        description="Modelos de fallback da OpenAI (separados por vírgula)"
+    )
     openai_max_tokens: int = Field(
         default=4000,
         description="Máximo de tokens para resposta da OpenAI"
@@ -62,8 +66,12 @@ class Settings(BaseSettings):
         description="Chave de API do Google Gemini"
     )
     gemini_model: str = Field(
-        default="gemini-2.5-flash-preview-05-20",
+        default="gemini-2.5-flash",
         description="Modelo do Gemini a ser usado"
+    )
+    gemini_models_fallback: str = Field(
+        default="gemini-2.0-flash,gemini-2.0-flash-lite",
+        description="Modelos de fallback do Gemini (separados por vírgula)"
     )
     gemini_max_tokens: int = Field(
         default=8192,
@@ -79,3 +87,17 @@ class Settings(BaseSettings):
     def cors_origins_list(self) -> list[str]:
         """Retorna a lista de origens CORS."""
         return [origin.strip() for origin in self.cors_origins.split(",")]
+    
+    @property
+    def openai_fallback_list(self) -> list[str]:
+        """Retorna a lista de modelos de fallback da OpenAI."""
+        if not self.openai_models_fallback:
+            return []
+        return [model.strip() for model in self.openai_models_fallback.split(",")]
+    
+    @property
+    def gemini_fallback_list(self) -> list[str]:
+        """Retorna a lista de modelos de fallback do Gemini."""
+        if not self.gemini_models_fallback:
+            return []
+        return [model.strip() for model in self.gemini_models_fallback.split(",")]

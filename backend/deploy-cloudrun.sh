@@ -40,7 +40,7 @@ gcloud run deploy $SERVICE_NAME \
     --max-instances 1 \
     --concurrency 80 \
     --timeout 60s \
-    --set-env-vars "AI_PROVIDER=openai,DEBUG=false,OPENAI_MODEL=gpt-3.5-turbo,GEMINI_MODEL=gemini-1.5-flash" \
+    --set-env-vars "AI_PROVIDER=openai,DEBUG=false,OPENAI_MODEL=gpt-4o-mini,OPENAI_MODELS_FALLBACK=gpt-3.5-turbo,OPENAI_MAX_TOKENS=4000,GEMINI_MODEL=gemini-2.5-flash,GEMINI_MODELS_FALLBACK=gemini-2.0-flash;gemini-2.0-flash-lite,GEMINI_MAX_TOKENS=8192" \
     --set-secrets "OPENAI_API_KEY=openai-api-key:latest,GEMINI_API_KEY=gemini-api-key:latest"
 
 echo -e "\n✅ Deploy concluído!"

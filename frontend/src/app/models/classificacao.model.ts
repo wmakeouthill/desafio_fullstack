@@ -27,6 +27,8 @@ export interface ClassificarArquivoResponse extends ClassificacaoResultado {
 export interface ProviderInfo {
     available: boolean;
     model: string;
+    fallback_models?: string[];
+    max_tokens?: number;
 }
 
 export interface ProvidersResponse {
