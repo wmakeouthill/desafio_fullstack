@@ -1,0 +1,74 @@
+<div class="resultado-container">
+  <header class="resultado-header">
+    <h2>✅ Resultado da Classificação</h2>
+    <span class="provider-badge">
+      {{ providerIcon }} {{ provider() === 'gemini' ? 'Gemini' : 'OpenAI' }}
+    </span>
+  </header>
+
+  <div class="resultado-content">
+    <!-- Categoria -->
+    <div class="info-card categoria-card" [class]="categoriaClasse">
+      <div class="card-icon">
+        @if (resultado().categoria === 'Produtivo') {
+          ✅
+        } @else {
+          ⏸️
+        }
+      </div>
+      <div class="card-content">
+        <span class="card-label">Categoria</span>
+        <span class="card-value">{{ resultado().categoria }}</span>
+      </div>
+    </div>
+
+    <!-- Confiança -->
+    <div class="info-card confianca-card">
+      <div class="card-icon">📊</div>
+      <div class="card-content">
+        <span class="card-label">Confiança</span>
+        <div class="confianca-bar-container">
+          <div
+            class="confianca-bar"
+            [style.width.%]="resultado().confianca * 100"
+            [class.alta]="resultado().confianca >= 0.8"
+            [class.media]="resultado().confianca >= 0.5 && resultado().confianca < 0.8"
+            [class.baixa]="resultado().confianca < 0.5">
+          </div>
+        </div>
+        <span class="confianca-valor">{{ resultado().confianca | percent:'1.0-0' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resposta Sugerida -->
+  <div class="resposta-section">
+    <div class="resposta-header">
+      <h3>💬 Resposta Sugerida</h3>
+      <button
+        type="button"
+        class="btn-copiar"
+        (click)="copiarResposta()"
+        [class.copiado]="copiado()">
+        @if (copiado()) {
+          ✓ Copiado!
+        } @else {
+          📋 Copiar
+        }
+      </button>
+    </div>
+    <div class="resposta-texto">
+      {{ resultado().resposta_sugerida }}
+    </div>
+  </div>
+
+  <!-- Ações -->
+  <div class="acoes">
+    <button
+      type="button"
+      class="btn-nova-classificacao"
+      (click)="classificarNovamente()">
+      🔄 Nova Classificação
+    </button>
+  </div>
+</div>

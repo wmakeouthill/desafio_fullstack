@@ -1,0 +1,293 @@
+// Variáveis corporativas
+$primary-color: #2563eb;
+$gray-50: #f8fafc;
+$gray-100: #f1f5f9;
+$gray-200: #e2e8f0;
+$gray-300: #cbd5e1;
+$gray-400: #94a3b8;
+$gray-500: #64748b;
+$gray-600: #475569;
+$gray-700: #334155;
+$gray-800: #1e293b;
+$gray-900: #0f172a;
+
+:host {
+    display: block;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background: $gray-100;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    @media (min-width: 1200px) {
+        height: calc(100vh - 2rem);
+        margin: 1rem auto;
+        border-radius: 12px;
+    }
+}
+
+// App Header
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, $gray-900 0%, $gray-800 100%);
+    border-bottom: 1px solid $gray-700;
+}
+
+.app-header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 900px;
+    width: 100%;
+}
+
+.app-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.header-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.app-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.app-subtitle {
+    font-size: 0.75rem;
+    color: $gray-400;
+    font-weight: 400;
+}
+
+.app-badge {
+    padding: 0.25rem 0.625rem;
+    background: linear-gradient(135deg, $primary-color 0%, #7c3aed 100%);
+    border-radius: 4px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+}
+
+// Chat Main
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: 100%;
+    overflow: hidden;
+    background: $gray-50;
+}
+
+// Messages Area
+.messages-area {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    min-height: 0;
+
+    // Scrollbar customizada apenas para área de mensagens
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $gray-300;
+        border-radius: 4px;
+
+        &:hover {
+            background: $gray-400;
+        }
+    }
+}
+
+// Chat Input (fixo na parte inferior)
+app-chat-input {
+    flex-shrink: 0;
+}
+
+// Empty State
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    padding: 2rem;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.empty-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.empty-emoji {
+    font-size: 80px;
+    line-height: 1;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: float 3s ease-in-out infinite;
+}
+
+.empty-logo {
+    height: 80px;
+    width: auto;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.empty-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $gray-900;
+    margin: 0 0 0.75rem;
+}
+
+.empty-description {
+    max-width: 480px;
+    color: $gray-600;
+    line-height: 1.6;
+    margin: 0 0 2rem;
+
+    strong {
+        color: $gray-800;
+    }
+}
+
+.empty-features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    background: white;
+    border: 1px solid $gray-200;
+    border-radius: 8px;
+
+    .feature-icon {
+        font-size: 1.125rem;
+        line-height: 1;
+    }
+
+    .feature-text {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $gray-700;
+    }
+}
+
+// Responsivo
+@media (max-width: 640px) {
+    .app-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .app-header-content {
+        gap: 0.75rem;
+    }
+
+    .app-logo {
+        height: 32px;
+    }
+
+    .app-title {
+        font-size: 1rem;
+    }
+
+    .app-subtitle {
+        display: none;
+    }
+
+    .app-badge {
+        font-size: 0.625rem;
+        padding: 0.125rem 0.375rem;
+    }
+
+    .empty-state {
+        padding: 1.5rem;
+    }
+
+    .empty-logo-container {
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .empty-emoji {
+        font-size: 60px;
+        height: 60px;
+    }
+
+    .empty-logo {
+        height: 60px;
+    }
+
+    .empty-title {
+        font-size: 1.25rem;
+    }
+
+    .empty-description {
+        font-size: 0.9375rem;
+    }
+
+    .empty-features {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .feature {
+        width: 100%;
+        justify-content: center;
+    }
+}

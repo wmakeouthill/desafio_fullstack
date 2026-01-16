@@ -1,0 +1,71 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: email-classifier-api-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - AI_PROVIDER=${AI_PROVIDER:-openai}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-3.5-turbo}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-1.5-flash}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:4200,http://localhost:3000}
+      - DEBUG=${DEBUG:-true}
+    env_file:
+      - .env
+    volumes:
+      # Montar código fonte para hot-reload
+      - ./backend:/app
+      # Evitar sobrescrever dependências instaladas no container
+      - /app/__pycache__
+      - /app/.pytest_cache
+      # Excluir venv se existir localmente
+      - /app/venv
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app --reload-include '*.py'
+    restart: unless-stopped
+    networks:
+      - email-classifier-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/emails/health')",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  frontend:
+    image: node:22-alpine
+    container_name: email-classifier-frontend-dev
+    working_dir: /app
+    ports:
+      - "4200:4200"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    volumes:
+      # Montar código fonte para hot-reload
+      - ./frontend:/app
+      # Persistir node_modules para não reinstalar sempre
+      - frontend-node-modules:/app/node_modules
+    command: sh -c "npm install && npm start -- --host 0.0.0.0 --port 4200"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - email-classifier-network
+
+volumes:
+  frontend-node-modules:
+
+networks:
+  email-classifier-network:
+    driver: bridge

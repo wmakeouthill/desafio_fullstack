@@ -1,0 +1,100 @@
+<div class="email-upload-container">
+  <header class="header">
+    <h1>📧 Classificador de Emails com IA</h1>
+    <p class="subtitle">Classifique emails automaticamente e receba sugestões de resposta</p>
+  </header>
+
+  <!-- Seletor de Provider -->
+  <section class="provider-section">
+    <label class="section-label">Provedor de IA</label>
+    <div class="provider-buttons">
+      @for (p of providersDisponiveis(); track p.value) {
+        <button
+          type="button"
+          class="provider-btn"
+          [class.active]="providerSelecionado() === p.value"
+          [class.disabled]="!p.available"
+          [disabled]="!p.available"
+          (click)="onProviderChange(p.value)">
+          @if (p.value === 'openai') {
+            <span class="provider-icon">🤖</span>
+          } @else {
+            <span class="provider-icon">✨</span>
+          }
+          <span class="provider-name">{{ p.label }}</span>
+          <span class="provider-model">{{ p.model }}</span>
+          @if (!p.available) {
+            <span class="provider-unavailable">Não configurado</span>
+          }
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Formulário de entrada -->
+  <section class="input-section">
+    <label class="section-label">Conteúdo do Email</label>
+
+    @if (!modoUpload()) {
+      <textarea
+        ngSkipHydration
+        class="email-textarea"
+        [ngModel]="conteudoEmail()"
+        (ngModelChange)="conteudoEmail.set($event)"
+        placeholder="Cole o conteúdo do email aqui ou faça upload de um arquivo..."
+        rows="10"></textarea>
+    }
+
+    <div class="upload-area">
+      <input
+        type="file"
+        accept=".txt,.pdf"
+        (change)="onArquivoSelecionado($event)"
+        #fileInput
+        hidden>
+
+      @if (arquivoSelecionado(); as arquivo) {
+        <div class="arquivo-selecionado">
+          <span class="arquivo-icon">📄</span>
+          <span class="arquivo-nome">{{ arquivo.name }}</span>
+          <span class="arquivo-tamanho">({{ (arquivo.size / 1024).toFixed(1) }} KB)</span>
+          <button type="button" class="btn-remover" (click)="limparArquivo()">✕</button>
+        </div>
+      } @else {
+        <button type="button" class="btn-upload" (click)="fileInput.click()">
+          📁 Selecionar Arquivo (.txt ou .pdf)
+        </button>
+      }
+    </div>
+
+    <button
+      type="button"
+      class="btn-enviar"
+      [disabled]="!podeEnviar()"
+      (click)="enviar()">
+      @if (carregando()) {
+        <span class="loading-spinner"></span>
+        Processando...
+      } @else {
+        🚀 Classificar Email
+      }
+    </button>
+  </section>
+
+  <!-- Erro -->
+  @if (erro(); as mensagemErro) {
+    <div class="erro-container">
+      <span class="erro-icon">⚠️</span>
+      <span class="erro-mensagem">{{ mensagemErro }}</span>
+      <button type="button" class="btn-fechar" (click)="erro.set(null)">✕</button>
+    </div>
+  }
+
+  <!-- Resultado -->
+  @if (resultado(); as res) {
+    <app-resultado-classificacao
+      [resultado]="res"
+      [provider]="providerSelecionado()"
+      (novaClassificacao)="limparResultado()" />
+  }
+</div>

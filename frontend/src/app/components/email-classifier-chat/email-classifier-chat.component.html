@@ -1,0 +1,60 @@
+<div class="chat-container">
+    <!-- Header Único do App -->
+    <header class="app-header">
+        <div class="app-header-content">
+            <img src="logo_autou.png" alt="Autou" class="app-logo" />
+            <div class="header-text">
+                <h1 class="app-title">Classificador de Emails</h1>
+                <span class="app-subtitle">Equipe de Soluções de IA para Comunicação</span>
+            </div>
+            <span class="app-badge">AI-Powered</span>
+        </div>
+    </header>
+
+    <!-- Container do Chat -->
+    <main class="chat-main">
+        <!-- Área de mensagens -->
+        <div class="messages-area" #messagesContainer>
+            @if (temMensagens()) {
+                @for (msg of mensagens(); track msg.id) {
+                    <app-chat-message [message]="msg" />
+                }
+            } @else {
+                <!-- Empty state -->
+                <div class="empty-state">
+                    <div class="empty-logo-container">
+                        <span class="empty-emoji">🤖</span>
+                        <img src="logo_autou.png" alt="Autou" class="empty-logo" />
+                    </div>
+                    <h2 class="empty-title">Classificador de Emails com IA</h2>
+                    <p class="empty-description">
+                        Cole o conteúdo de um email ou anexe um arquivo (.txt ou .pdf) para classificá-lo automaticamente como <strong>Produtivo</strong> ou <strong>Improdutivo</strong>.
+                    </p>
+                    <div class="empty-features">
+                        <div class="feature">
+                            <span class="feature-icon">⚡</span>
+                            <span class="feature-text">Classificação instantânea</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">💬</span>
+                            <span class="feature-text">Sugestão de resposta</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🎯</span>
+                            <span class="feature-text">Alta precisão</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Input do Chat -->
+        <app-chat-input
+            [providers]="providers()"
+            [providerSelecionado]="providerSelecionado()"
+            [carregando]="carregando()"
+            (enviarTexto)="onEnviarTexto($event)"
+            (enviarArquivo)="onEnviarArquivo($event)"
+            (providerChange)="onProviderChange($event)" />
+    </main>
+</div>

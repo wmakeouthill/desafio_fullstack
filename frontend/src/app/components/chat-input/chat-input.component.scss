@@ -1,0 +1,426 @@
+// Variáveis corporativas
+$primary-color: #2563eb;
+$primary-hover: #1d4ed8;
+$success-color: #16a34a;
+$error-color: #dc2626;
+
+$gray-50: #f8fafc;
+$gray-100: #f1f5f9;
+$gray-200: #e2e8f0;
+$gray-300: #cbd5e1;
+$gray-400: #94a3b8;
+$gray-500: #64748b;
+$gray-600: #475569;
+$gray-700: #334155;
+$gray-800: #1e293b;
+$gray-900: #0f172a;
+
+$border-radius: 12px;
+$border-radius-sm: 8px;
+
+.chat-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem 1.5rem;
+    background: white;
+    border-top: 1px solid $gray-200;
+}
+
+// Erro toast
+.erro-toast {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 0.875rem;
+    background: rgba($error-color, 0.1);
+    border: 1px solid rgba($error-color, 0.2);
+    border-radius: $border-radius-sm;
+    animation: slideDown 0.2s ease;
+
+    .erro-icon {
+        font-size: 1rem;
+    }
+
+    .erro-text {
+        flex: 1;
+        font-size: 0.875rem;
+        color: $error-color;
+        font-weight: 500;
+    }
+
+    .btn-fechar-erro {
+        width: 20px;
+        height: 20px;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: $error-color;
+        cursor: pointer;
+        font-size: 0.75rem;
+
+        &:hover {
+            background: rgba($error-color, 0.1);
+        }
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Arquivo preview
+.arquivo-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 0.875rem;
+    background: $gray-50;
+    border: 1px solid $gray-200;
+    border-radius: $border-radius-sm;
+
+    .arquivo-icon {
+        font-size: 1rem;
+    }
+
+    .arquivo-nome {
+        font-weight: 500;
+        color: $gray-800;
+        font-size: 0.875rem;
+    }
+
+    .arquivo-tamanho {
+        font-size: 0.8125rem;
+        color: $gray-500;
+    }
+
+    .btn-remover-arquivo {
+        margin-left: auto;
+        width: 20px;
+        height: 20px;
+        border: none;
+        border-radius: 50%;
+        background: $gray-300;
+        color: $gray-600;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: $error-color;
+            color: white;
+        }
+    }
+}
+
+// Input wrapper
+.input-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: $gray-50;
+    border: 2px solid $gray-200;
+    border-radius: $border-radius;
+    transition: border-color 0.2s ease;
+
+    &:focus-within {
+        border-color: $primary-color;
+        background: white;
+    }
+}
+
+// Botão anexo
+.btn-anexo {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: $border-radius-sm;
+    background: transparent;
+    color: $gray-500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+        background: $gray-200;
+        color: $gray-700;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+// Input texto
+.input-texto {
+    flex: 1;
+    min-height: 40px;
+    max-height: 150px;
+    padding: 0.5rem 0;
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    resize: none;
+    color: $gray-900;
+
+    &:focus {
+        outline: none;
+    }
+
+    &::placeholder {
+        color: $gray-400;
+    }
+
+    &:disabled {
+        opacity: 0.7;
+    }
+}
+
+.input-texto-placeholder {
+    flex: 1;
+    min-height: 40px;
+    padding: 0.5rem 0;
+    color: $gray-400;
+    font-size: 0.9375rem;
+    display: flex;
+    align-items: center;
+}
+
+.arquivo-placeholder {
+    flex: 1;
+    padding: 0.5rem 0;
+    color: $gray-600;
+    font-size: 0.9375rem;
+}
+
+// Actions container
+.actions-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+// Provider selector
+.provider-selector {
+    position: relative;
+}
+
+.btn-provider {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid $gray-300;
+    border-radius: $border-radius-sm;
+    background: white;
+    color: $gray-700;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+        border-color: $primary-color;
+        color: $primary-color;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .provider-icon {
+        font-size: 0.875rem;
+        line-height: 1;
+    }
+
+    .provider-name {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .chevron {
+        flex-shrink: 0;
+        transition: transform 0.2s ease;
+    }
+}
+
+// Provider menu
+.provider-menu {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    min-width: 240px;
+    padding: 0.5rem;
+    background: white;
+    border: 1px solid $gray-200;
+    border-radius: $border-radius-sm;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    animation: fadeInUp 0.15s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.provider-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    text-align: left;
+
+    &:hover:not(.disabled) {
+        background: $gray-50;
+    }
+
+    &.active {
+        background: rgba($primary-color, 0.08);
+    }
+
+    &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .option-icon {
+        font-size: 1.25rem;
+        line-height: 1;
+    }
+
+    .option-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+    }
+
+    .option-label {
+        font-weight: 600;
+        color: $gray-900;
+        font-size: 0.875rem;
+    }
+
+    .option-model {
+        font-size: 0.75rem;
+        color: $gray-500;
+    }
+
+    .check-icon {
+        color: $primary-color;
+        font-weight: 600;
+    }
+
+    .unavailable-badge {
+        font-size: 0.6875rem;
+        color: $error-color;
+        background: rgba($error-color, 0.1);
+        padding: 0.125rem 0.375rem;
+        border-radius: 4px;
+    }
+}
+
+// Botão enviar
+.btn-enviar {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: $border-radius-sm;
+    background: $primary-color;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+        background: $primary-hover;
+        transform: scale(1.05);
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+    }
+}
+
+// Spinner
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// Responsivo
+@media (max-width: 640px) {
+    .chat-input-container {
+        padding: 0.75rem 1rem 1rem;
+    }
+
+    .input-wrapper {
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .btn-anexo,
+    .btn-enviar {
+        width: 36px;
+        height: 36px;
+    }
+
+    .btn-provider {
+        padding: 0.375rem 0.5rem;
+
+        .provider-name {
+            display: none;
+        }
+    }
+
+    .provider-menu {
+        right: -40px;
+        min-width: 220px;
+    }
+}

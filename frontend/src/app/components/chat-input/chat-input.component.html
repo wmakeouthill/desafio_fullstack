@@ -1,0 +1,126 @@
+<div class="chat-input-container">
+    <!-- Erro -->
+    @if (erro(); as mensagemErro) {
+        <div class="erro-toast">
+            <span class="erro-icon">⚠️</span>
+            <span class="erro-text">{{ mensagemErro }}</span>
+            <button type="button" class="btn-fechar-erro" (click)="erro.set(null)">✕</button>
+        </div>
+    }
+
+    <!-- Arquivo selecionado -->
+    @if (arquivoSelecionado(); as arquivo) {
+        <div class="arquivo-preview">
+            <span class="arquivo-icon">📄</span>
+            <span class="arquivo-nome">{{ arquivo.name }}</span>
+            <span class="arquivo-tamanho">({{ (arquivo.size / 1024).toFixed(1) }} KB)</span>
+            <button type="button" class="btn-remover-arquivo" (click)="limparArquivo()">✕</button>
+        </div>
+    }
+
+    <div class="input-wrapper">
+        <!-- Botão de arquivo (esquerda) -->
+        <input
+            type="file"
+            accept=".txt,.pdf"
+            (change)="onArquivoSelecionado($event)"
+            #fileInput
+            hidden>
+        <button
+            type="button"
+            class="btn-anexo"
+            (click)="fileInput.click()"
+            title="Anexar arquivo (.txt ou .pdf)"
+            [disabled]="carregando()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
+            </svg>
+        </button>
+
+        <!-- Input de texto -->
+        @if (!arquivoSelecionado()) {
+            @if (isBrowser) {
+                <textarea
+                    class="input-texto"
+                    [ngModel]="conteudoEmail()"
+                    (ngModelChange)="conteudoEmail.set($event)"
+                    (keydown)="onKeydown($event)"
+                    placeholder="Cole o conteúdo do email aqui..."
+                    rows="1"
+                    [disabled]="carregando()"></textarea>
+            } @else {
+                <div class="input-texto-placeholder">Carregando...</div>
+            }
+        } @else {
+            <div class="arquivo-placeholder">
+                Arquivo selecionado: {{ arquivoSelecionado()?.name }}
+            </div>
+        }
+
+        <!-- Container dos botões (direita) -->
+        <div class="actions-container">
+            <!-- Seletor de Provider -->
+            <div class="provider-selector">
+                <button
+                    type="button"
+                    class="btn-provider"
+                    (click)="toggleMenuProvider()"
+                    [disabled]="carregando()"
+                    title="Selecionar modelo de IA">
+                    @if (providerAtual(); as p) {
+                        <span class="provider-icon">{{ p.icon }}</span>
+                        <span class="provider-name">{{ p.model }}</span>
+                    } @else {
+                        <span class="provider-icon">🤖</span>
+                    }
+                    <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+
+                @if (menuProviderAberto()) {
+                    <div class="provider-menu">
+                        @for (p of providersDisponiveis(); track p.value) {
+                            <button
+                                type="button"
+                                class="provider-option"
+                                [class.active]="providerSelecionado() === p.value"
+                                [class.disabled]="!p.available"
+                                [disabled]="!p.available"
+                                (click)="selecionarProvider(p.value)">
+                                <span class="option-icon">{{ p.icon }}</span>
+                                <div class="option-content">
+                                    <span class="option-label">{{ p.label }}</span>
+                                    <span class="option-model">{{ p.model }}</span>
+                                </div>
+                                @if (providerSelecionado() === p.value) {
+                                    <span class="check-icon">✓</span>
+                                }
+                                @if (!p.available) {
+                                    <span class="unavailable-badge">Não configurado</span>
+                                }
+                            </button>
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- Botão enviar -->
+            <button
+                type="button"
+                class="btn-enviar"
+                [disabled]="!podeEnviar()"
+                (click)="enviar()"
+                title="Classificar email">
+                @if (carregando()) {
+                    <span class="spinner"></span>
+                } @else {
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                }
+            </button>
+        </div>
+    </div>
+</div>

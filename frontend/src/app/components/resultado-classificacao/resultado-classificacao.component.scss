@@ -1,0 +1,267 @@
+// Variáveis
+$primary-color: #3b82f6;
+$success-color: #22c55e;
+$warning-color: #f59e0b;
+$error-color: #ef4444;
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-500: #6b7280;
+$gray-700: #374151;
+$gray-900: #111827;
+
+$border-radius: 12px;
+$border-radius-sm: 8px;
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+:host {
+  display: block;
+  margin-top: 2rem;
+}
+
+.resultado-container {
+  background: linear-gradient(135deg, $gray-50 0%, white 100%);
+  border: 1px solid $gray-200;
+  border-radius: $border-radius;
+  padding: 1.5rem;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Header
+.resultado-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $gray-900;
+    margin: 0;
+  }
+
+  .provider-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    background: $gray-100;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: $gray-700;
+  }
+}
+
+// Content Grid
+.resultado-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+// Info Cards
+.info-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: $border-radius-sm;
+  box-shadow: $shadow-sm;
+  border: 1px solid $gray-200;
+
+  .card-icon {
+    font-size: 2rem;
+  }
+
+  .card-content {
+    flex: 1;
+  }
+
+  .card-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $gray-500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+
+  .card-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $gray-900;
+  }
+}
+
+// Categoria Card Colors
+.categoria-card {
+  &.produtivo {
+    border-left: 4px solid $success-color;
+
+    .card-value {
+      color: $success-color;
+    }
+  }
+
+  &.improdutivo {
+    border-left: 4px solid $warning-color;
+
+    .card-value {
+      color: $warning-color;
+    }
+  }
+}
+
+// Confiança
+.confianca-card {
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+.confianca-bar-container {
+  width: 100%;
+  height: 8px;
+  background: $gray-200;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.confianca-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+
+  &.alta {
+    background: linear-gradient(90deg, $success-color 0%, #16a34a 100%);
+  }
+
+  &.media {
+    background: linear-gradient(90deg, $warning-color 0%, #d97706 100%);
+  }
+
+  &.baixa {
+    background: linear-gradient(90deg, $error-color 0%, #dc2626 100%);
+  }
+}
+
+.confianca-valor {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $gray-900;
+}
+
+// Resposta Section
+.resposta-section {
+  background: white;
+  border: 1px solid $gray-200;
+  border-radius: $border-radius-sm;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.resposta-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $gray-900;
+    margin: 0;
+  }
+}
+
+.btn-copiar {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid $gray-200;
+  border-radius: $border-radius-sm;
+  background: white;
+  color: $gray-700;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: $gray-50;
+    border-color: $primary-color;
+    color: $primary-color;
+  }
+
+  &.copiado {
+    background: $success-color;
+    border-color: $success-color;
+    color: white;
+  }
+}
+
+.resposta-texto {
+  padding: 1rem;
+  background: $gray-50;
+  border-radius: $border-radius-sm;
+  color: $gray-700;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+// Ações
+.acoes {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-nova-classificacao {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid $primary-color;
+  border-radius: $border-radius-sm;
+  background: white;
+  color: $primary-color;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: $primary-color;
+    color: white;
+  }
+}
+
+// Responsividade
+@media (max-width: 640px) {
+  .resultado-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .resposta-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}

@@ -1,0 +1,129 @@
+<div class="message-wrapper" [class.user]="message().tipo === 'user'" [class.ai]="message().tipo === 'ai'">
+    <div class="message-container">
+        <!-- Avatar -->
+        <div class="avatar">
+            @if (message().tipo === 'user') {
+                <span class="avatar-icon">👤</span>
+            } @else {
+                <span class="avatar-icon">{{ providerIcon() }}</span>
+            }
+        </div>
+
+        <!-- Conteúdo da mensagem -->
+        <div class="message-content">
+            <!-- Header da mensagem -->
+            <div class="message-header">
+                <span class="sender-name">
+                    @if (message().tipo === 'user') {
+                        Você
+                    } @else {
+                        {{ providerLabel() }}
+                    }
+                </span>
+                <span class="message-time">{{ formatarHora() }}</span>
+            </div>
+
+            <!-- Corpo da mensagem -->
+            <div class="message-body">
+                @if (message().tipo === 'user') {
+                    <!-- Mensagem do usuário -->
+                    @if (message().arquivo; as arquivo) {
+                        <div class="arquivo-info">
+                            <span class="arquivo-icon">📄</span>
+                            <span class="arquivo-nome">{{ arquivo.nome }}</span>
+                            <span class="arquivo-tamanho">({{ (arquivo.tamanho / 1024).toFixed(1) }} KB)</span>
+                        </div>
+                    } @else {
+                        <p class="user-text">{{ message().conteudo }}</p>
+                    }
+                } @else {
+                    <!-- Mensagem da IA -->
+                    @if (message().carregando) {
+                        <div class="loading-container">
+                            <div class="typing-indicator">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <span class="loading-text">Analisando email...</span>
+                        </div>
+                    } @else if (message().resultado; as resultado) {
+                        <div class="resultado-wrapper">
+                            <!-- Cards de resultado -->
+                            <div class="resultado-cards">
+                                <!-- Categoria -->
+                                <div class="resultado-card" [class]="categoriaClasse()">
+                                    <div class="card-header">
+                                        @if (resultado.categoria === 'Produtivo') {
+                                            <span class="card-icon success">✅</span>
+                                        } @else {
+                                            <span class="card-icon warning">⏸️</span>
+                                        }
+                                        <span class="card-label">Categoria</span>
+                                    </div>
+                                    <span class="card-value">{{ resultado.categoria }}</span>
+                                </div>
+
+                                <!-- Confiança -->
+                                <div class="resultado-card confianca">
+                                    <div class="card-header">
+                                        <span class="card-icon">📊</span>
+                                        <span class="card-label">Confiança</span>
+                                    </div>
+                                    <div class="confianca-content">
+                                        <div class="confianca-bar-bg">
+                                            <div
+                                                class="confianca-bar"
+                                                [style.width.%]="resultado.confianca * 100"
+                                                [class.alta]="resultado.confianca >= 0.8"
+                                                [class.media]="resultado.confianca >= 0.5 && resultado.confianca < 0.8"
+                                                [class.baixa]="resultado.confianca < 0.5">
+                                            </div>
+                                        </div>
+                                        <span class="confianca-valor">{{ resultado.confianca | percent:'1.0-0' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Resposta sugerida -->
+                            <div class="resposta-container">
+                                <div class="resposta-header">
+                                    <span class="resposta-label">💬 Resposta Sugerida</span>
+                                    <div class="resposta-actions">
+                                        <button
+                                            type="button"
+                                            class="btn-visualizar"
+                                            (click)="abrirModal()">
+                                            ✉️ Ver Email
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="btn-copiar"
+                                            (click)="copiar()"
+                                            [class.copiado]="copiado()">
+                                            @if (copiado()) {
+                                                ✓ Copiado
+                                            } @else {
+                                                📋 Copiar
+                                            }
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="resposta-texto">{{ resultado.resposta_sugerida }}</div>
+                            </div>
+
+                            <!-- Modal de Preview de Email -->
+                            @if (modalAberto()) {
+                                <app-email-preview-modal
+                                    [resultado]="resultado"
+                                    [emailOriginal]="message().emailOriginal"
+                                    (fechar)="fecharModal()" />
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
