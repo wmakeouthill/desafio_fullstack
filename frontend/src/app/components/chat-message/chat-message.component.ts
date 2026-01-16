@@ -69,15 +69,8 @@ export class ChatMessageComponent {
     }
 
     gerarTextoEmail(): string {
-        const resposta = this.message().resultado?.resposta_sugerida;
-        if (!resposta) return '';
-
-        return `${resposta}
-
-Atenciosamente,
-
-${this.nomeFuncionario}
-Equipe de Soluções de IA para Comunicação - Autou`;
+        // Copia apenas o conteúdo da resposta, sem assinatura (assinatura é nativa do email)
+        return this.message().resultado?.resposta_sugerida || '';
     }
 
     abrirModal(): void {
