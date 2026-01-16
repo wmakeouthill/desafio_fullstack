@@ -9,6 +9,9 @@ export interface ClassificacaoResultado {
     categoria: CategoriaEmail;
     confianca: number;
     resposta_sugerida: string;
+    assunto?: string | null;
+    remetente?: string | null;
+    destinatario?: string | null;
 }
 
 export interface ClassificarEmailRequest {

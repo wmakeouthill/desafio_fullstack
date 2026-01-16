@@ -28,19 +28,25 @@ class PreprocessadorTexto:
         self._remover_stopwords = remover_stopwords
         self._stopwords_pt = self._carregar_stopwords()
     
-    def processar(self, texto: str) -> str:
+    def processar(self, texto: str, preservar_headers: bool = True) -> str:
         """
         Realiza o pré-processamento completo do texto.
         
         Args:
             texto: Texto original a ser processado
+            preservar_headers: Se True, mantém os headers do email (De, Para, Assunto)
+                              para que a IA possa extrair metadados. Default: True
             
         Returns:
             Texto processado e normalizado
         """
-        texto = self._limpar_headers_email(texto)
+        # NÃO remover headers por padrão - a IA precisa deles para extrair metadados
+        if not preservar_headers:
+            texto = self._limpar_headers_email(texto)
+        
         texto = self._remover_urls(texto)
-        texto = self._remover_emails(texto)
+        # NÃO remover emails do corpo, apenas normalizar
+        # texto = self._remover_emails(texto)
         texto = self._normalizar_espacos(texto)
         
         if self._remover_stopwords:

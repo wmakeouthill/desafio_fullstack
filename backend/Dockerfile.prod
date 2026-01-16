@@ -1,0 +1,66 @@
+# =============================================
+# PRODUCTION DOCKERFILE - Email Classifier API
+# =============================================
+# Multi-stage build for smaller image size
+
+# Stage 1: Builder
+FROM python:3.11-slim as builder
+
+WORKDIR /app
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Stage 2: Production
+FROM python:3.11-slim as production
+
+# Labels
+LABEL maintainer="Email Classifier"
+LABEL description="API para classificação de emails com IA - Production"
+
+# Security: Non-root user
+RUN addgroup --gid 1001 --system appgroup && \
+    adduser --uid 1001 --system --gid 1001 appuser
+
+# Environment
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app
+ENV PATH="/opt/venv/bin:$PATH"
+
+WORKDIR /app
+
+# Copy virtual environment from builder
+COPY --from=builder /opt/venv /opt/venv
+
+# Copy application code (only necessary files)
+COPY --chown=appuser:appgroup main.py .
+COPY --chown=appuser:appgroup application/ ./application/
+COPY --chown=appuser:appgroup config/ ./config/
+COPY --chown=appuser:appgroup domain/ ./domain/
+COPY --chown=appuser:appgroup infrastructure/ ./infrastructure/
+COPY --chown=appuser:appgroup interfaces/ ./interfaces/
+
+# Switch to non-root user
+USER appuser
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/emails/health')" || exit 1
+
+# Run with optimized settings for production
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1", "--no-access-log"]

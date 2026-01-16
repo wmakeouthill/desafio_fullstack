@@ -86,7 +86,10 @@ class ClassificarArquivoUseCase:
                 categoria=resultado.categoria.value,
                 confianca=resultado.confianca,
                 resposta_sugerida=resultado.resposta_sugerida,
-                nome_arquivo=nome_arquivo
+                nome_arquivo=nome_arquivo,
+                assunto=resultado.assunto,
+                remetente=resultado.remetente,
+                destinatario=resultado.destinatario
             )
         
         except ValueError as e:

@@ -52,7 +52,10 @@ class ClassificarEmailUseCase:
             return ClassificarEmailResponse(
                 categoria=resultado.categoria.value,
                 confianca=resultado.confianca,
-                resposta_sugerida=resultado.resposta_sugerida
+                resposta_sugerida=resultado.resposta_sugerida,
+                assunto=resultado.assunto,
+                remetente=resultado.remetente,
+                destinatario=resultado.destinatario
             )
         
         except ValueError as e:

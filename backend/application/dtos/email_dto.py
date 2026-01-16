@@ -50,13 +50,28 @@ class ClassificarEmailResponse(BaseModel):
         ...,
         description="Resposta automática sugerida para o email"
     )
+    assunto: Optional[str] = Field(
+        default=None,
+        description="Assunto detectado do email original"
+    )
+    remetente: Optional[str] = Field(
+        default=None,
+        description="Remetente detectado do email original"
+    )
+    destinatario: Optional[str] = Field(
+        default=None,
+        description="Destinatário detectado do email original"
+    )
     
     class Config:
         json_schema_extra = {
             "example": {
                 "categoria": "Produtivo",
                 "confianca": 0.95,
-                "resposta_sugerida": "Prezado(a), agradecemos o contato. Seu chamado #12345 está em análise e retornaremos em breve."
+                "resposta_sugerida": "Prezado(a), agradecemos o contato. Seu chamado #12345 está em análise e retornaremos em breve.",
+                "assunto": "Solicitação de Suporte",
+                "remetente": "João Silva <joao@empresa.com>",
+                "destinatario": "suporte@autou.com.br"
             }
         }
 
@@ -75,6 +90,9 @@ class ClassificarArquivoResponse(ClassificarEmailResponse):
                 "categoria": "Produtivo",
                 "confianca": 0.92,
                 "resposta_sugerida": "Prezado(a), recebemos sua solicitação e estamos analisando.",
-                "nome_arquivo": "email_cliente.txt"
+                "nome_arquivo": "email_cliente.txt",
+                "assunto": "Dúvida sobre fatura",
+                "remetente": "cliente@email.com",
+                "destinatario": "financeiro@autou.com.br"
             }
         }

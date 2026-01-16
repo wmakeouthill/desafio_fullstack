@@ -130,9 +130,24 @@ Sua missão é analisar emails recebidos e classificá-los para otimizar o tempo
 - Identifique quem é o REMETENTE (quem enviou) e quem é o DESTINATÁRIO (quem recebeu)
 
 ## SUA TAREFA:
-1. **Classificar** o email como "Produtivo" ou "Improdutivo"
-2. **Atribuir** um nível de confiança (0.0 a 1.0)
-3. **Sugerir** uma resposta apropriada (se necessário)
+1. **Extrair metadados** do email: assunto, remetente e destinatário
+2. **Classificar** o email como "Produtivo" ou "Improdutivo"
+3. **Atribuir** um nível de confiança (0.0 a 1.0)
+4. **Sugerir** uma resposta apropriada (se necessário)
+
+## EXTRAÇÃO DE METADADOS (MUITO IMPORTANTE - EXTRAIA COM PRECISÃO):
+- **assunto**: EXTRAIA O ASSUNTO EXATO E COMPLETO do email original. 
+  - Procure por "Assunto:", "Subject:", "Ref:", "Re:", "Fwd:" no texto
+  - O assunto geralmente aparece no início do email ou nos cabeçalhos
+  - Copie o assunto EXATAMENTE como está escrito, sem modificar
+  - Exemplo: Se o email tem "Assunto: Próxima Fase | Processo Seletivo AutoU", retorne exatamente "Próxima Fase | Processo Seletivo AutoU"
+  - Use null APENAS se realmente não houver assunto identificável
+- **remetente**: Extraia quem ENVIOU o email original.
+  - Procure por "De:", "From:" no texto
+  - Formato: "Nome <email>" ou apenas o nome/email disponível
+- **destinatario**: Extraia para quem o email foi ENVIADO.
+  - Procure por "Para:", "To:" no texto
+  - Use null se não encontrar
 
 ## CRITÉRIOS DE CLASSIFICAÇÃO:
 
@@ -179,13 +194,19 @@ Sua missão é analisar emails recebidos e classificá-los para otimizar o tempo
 ## REGRAS DA RESPOSTA SUGERIDA:
 - A resposta deve ser um email COMPLETO e pronto para enviar
 - DEVE incluir saudação apropriada no INÍCIO (detecte quem é o remetente do email):
-  - Se for pessoa física: "Prezado(a) [Nome]," ou "Olá [Nome],"
+  - Se for pessoa física: "Prezado(a) [Nome REAL extraído]," ou "Olá [Nome REAL],"
   - Se for empresa/equipe: "Prezada Equipe [Nome da Empresa]," ou "Prezados,"
   - Se não souber o nome: "Prezado(a)," ou "Olá,"
-- DEVE incluir despedida no FINAL: "Atenciosamente," ou "Cordialmente," (SEM nome depois)
+- DEVE terminar APENAS com "Atenciosamente," - NADA MAIS após isso!
 - Para PRODUTIVO: Resposta útil que ajude a resolver a solicitação
 - Para IMPRODUTIVO: Resposta breve e cordial OU apenas "Não é necessário responder este email."
-- **NUNCA** coloque nome após a despedida - a assinatura será adicionada automaticamente
+
+## REGRA CRÍTICA SOBRE DESPEDIDA (OBRIGATÓRIO):
+- A resposta DEVE terminar EXATAMENTE com a palavra "Atenciosamente," e PONTO FINAL
+- **NUNCA** escreva NADA após "Atenciosamente," - nem nome, nem [Seu Nome], nem assinatura
+- **PROIBIDO**: "Atenciosamente, [Seu Nome]" ou "Atenciosamente, Maria" ou qualquer variação
+- **CORRETO**: A resposta termina em "Atenciosamente," e nada mais
+- A assinatura será adicionada automaticamente pelo sistema
 
 ## REGRAS CRÍTICAS (ANTI-ALUCINAÇÃO):
 - **NUNCA** invente informações que não estão no email
@@ -203,7 +224,37 @@ EMAIL PARA CLASSIFICAR:
 ═══════════════════════════════════════
 
 RESPONDA APENAS com um objeto JSON válido (sem markdown, sem explicações):
-{{"categoria": "Produtivo ou Improdutivo", "confianca": número entre 0.0 e 1.0, "resposta_sugerida": "resposta apropriada ao contexto"}}"""
+{{"categoria": "Produtivo ou Improdutivo", "confianca": número entre 0.0 e 1.0, "resposta_sugerida": "resposta apropriada ao contexto", "assunto": "assunto extraído do email ou null", "remetente": "remetente extraído ou null", "destinatario": "destinatário extraído ou null"}}"""
+    
+    def _limpar_resposta(self, resposta: str) -> str:
+        """
+        Remove placeholders e texto após a despedida.
+        
+        Args:
+            resposta: Texto da resposta sugerida
+            
+        Returns:
+            Resposta limpa sem placeholders
+        """
+        import re
+        
+        # Padrões para remover após "Atenciosamente," ou "Cordialmente,"
+        # Remove: [Seu Nome], [Nome], [Assinatura], ou qualquer nome após a despedida
+        padroes_remover = [
+            r'(Atenciosamente,?)\s*\[.*?\]',  # [Seu Nome], [Nome], etc
+            r'(Cordialmente,?)\s*\[.*?\]',
+            r'(Atenciosamente,?)\s+[A-Z][a-záàâãéèêíïóôõöúçñ]+(\s+[A-Z][a-záàâãéèêíïóôõöúçñ]+)*\s*$',  # Nome próprio após
+            r'(Cordialmente,?)\s+[A-Z][a-záàâãéèêíïóôõöúçñ]+(\s+[A-Z][a-záàâãéèêíïóôõöúçñ]+)*\s*$',
+        ]
+        
+        resultado = resposta
+        for padrao in padroes_remover:
+            resultado = re.sub(padrao, r'\1', resultado, flags=re.IGNORECASE | re.MULTILINE)
+        
+        # Garantir que termina com "Atenciosamente," limpo
+        resultado = resultado.strip()
+        
+        return resultado
     
     def _converter_resposta(self, resposta: dict) -> ClassificacaoResultado:
         """
@@ -232,8 +283,27 @@ RESPONDA APENAS com um objeto JSON válido (sem markdown, sem explicações):
             "Obrigado pelo seu email. Retornaremos em breve."
         )
         
+        # Limpar a resposta: remover [Seu Nome] e variações após "Atenciosamente,"
+        resposta_sugerida = self._limpar_resposta(resposta_sugerida)
+        
+        # Extrair metadados (podem ser null/None)
+        assunto = resposta.get("assunto")
+        remetente = resposta.get("remetente")
+        destinatario = resposta.get("destinatario")
+        
+        # Limpar valores "null" string
+        if assunto and str(assunto).lower() == "null":
+            assunto = None
+        if remetente and str(remetente).lower() == "null":
+            remetente = None
+        if destinatario and str(destinatario).lower() == "null":
+            destinatario = None
+        
         return ClassificacaoResultado(
             categoria=categoria,
             confianca=confianca,
-            resposta_sugerida=resposta_sugerida
+            resposta_sugerida=resposta_sugerida,
+            assunto=assunto,
+            remetente=remetente,
+            destinatario=destinatario
         )

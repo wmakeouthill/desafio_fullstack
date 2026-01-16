@@ -4,7 +4,8 @@ Value Object para resultado da classificação.
 Value Objects são imutáveis e definidos pelo seu valor, não por identidade.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Optional
 
 from domain.entities.email import CategoriaEmail
 
@@ -18,6 +19,9 @@ class ClassificacaoResultado:
         categoria: Categoria atribuída ao email (Produtivo/Improdutivo)
         confianca: Nível de confiança da classificação (0.0 a 1.0)
         resposta_sugerida: Texto da resposta automática sugerida
+        assunto: Assunto detectado do email original (opcional)
+        remetente: Remetente detectado do email original (opcional)
+        destinatario: Destinatário detectado do email original (opcional)
     
     Raises:
         ValueError: Se a confiança não estiver entre 0 e 1
@@ -25,6 +29,9 @@ class ClassificacaoResultado:
     categoria: CategoriaEmail
     confianca: float
     resposta_sugerida: str
+    assunto: Optional[str] = field(default=None)
+    remetente: Optional[str] = field(default=None)
+    destinatario: Optional[str] = field(default=None)
     
     def __post_init__(self):
         """Valida os dados do value object após inicialização."""

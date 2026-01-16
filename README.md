@@ -15,12 +15,15 @@ Solução digital para empresas do setor financeiro que lidam com alto volume de
 
 ### Funcionalidades
 
-- ✅ **Classificação Automática**: Classifica emails em categorias predefinidas
-- ✅ **Geração de Respostas**: Sugere respostas automáticas baseadas no conteúdo
-- ✅ **Suporte a Múltiplos Formatos**: Aceita texto direto ou upload de arquivos (.txt, .pdf)
-- ✅ **Interface Moderna**: UI intuitiva e responsiva com Angular
+- ✅ **Classificação Automática**: Classifica emails em categorias predefinidas (Produtivo/Improdutivo)
+- ✅ **Geração de Respostas**: Sugere respostas automáticas baseadas no conteúdo do email
+- ✅ **Suporte a Múltiplos Formatos**: Aceita texto direto ou upload de arquivos (.txt, .pdf, .eml, .msg, .mbox)
+- ✅ **Interface de Chat**: Experiência de chat interativa com histórico de mensagens
+- ✅ **Seleção de Provider de IA**: Escolha entre OpenAI GPT e Google Gemini dinamicamente
+- ✅ **Modal de Preview de Email**: Visualização profissional do email formatado com opção de cópia
+- ✅ **Interface Moderna**: UI intuitiva e responsiva com Angular 20+ e Signals
 - ✅ **API RESTful**: Backend robusto com FastAPI e Clean Architecture
-- ✅ **Múltiplos Provedores de IA**: Suporte para OpenAI GPT e Google Gemini
+- ✅ **Docker Compose**: Configuração completa para desenvolvimento e produção com hot-reload
 
 ### Categorias de Classificação
 
@@ -28,6 +31,18 @@ Solução digital para empresas do setor financeiro que lidam com alto volume de
 |-----------|-----------|----------|
 | **Produtivo** | Requer ação ou resposta | Suporte técnico, dúvidas, solicitações, atualização sobre casos |
 | **Improdutivo** | Não requer ação imediata | Felicitações, agradecimentos, mensagens não relevantes |
+
+### Formatos de Arquivo Suportados
+
+| Formato | Descrição | Extensão |
+|---------|-----------|----------|
+| **Texto** | Arquivo de texto simples | `.txt` |
+| **PDF** | Documento PDF | `.pdf` |
+| **Email** | Arquivo de email padrão | `.eml` |
+| **Outlook** | Mensagem do Microsoft Outlook | `.msg` |
+| **MBOX** | Formato de caixa de correio Unix | `.mbox` |
+
+> **Nota:** Todos os formatos são processados automaticamente, extraindo o conteúdo do email para classificação.
 
 ---
 
@@ -40,6 +55,7 @@ Solução digital para empresas do setor financeiro que lidam com alto volume de
 - **OpenAI GPT** - API de IA para classificação e geração de respostas
 - **Google Gemini** - Alternativa de IA para classificação
 - **PyPDF2** - Leitura de arquivos PDF
+- **extract-msg** - Leitura de arquivos .msg (Outlook)
 - **Pydantic** - Validação de dados e configurações
 - **Uvicorn** - Servidor ASGI de alta performance
 - **Pytest** - Framework de testes
@@ -180,6 +196,17 @@ ng serve --open
 
 O frontend estará disponível em: <http://localhost:4200>
 
+### 🎨 Interface de Chat
+
+A aplicação oferece uma interface de chat moderna e interativa:
+
+- **Histórico de Mensagens**: Todas as classificações são mantidas em um histórico conversacional
+- **Upload de Arquivos**: Arraste e solte ou selecione arquivos diretamente no chat
+- **Seleção de Provider**: Escolha o provedor de IA (OpenAI ou Gemini) antes de cada classificação
+- **Preview de Email**: Visualize o email formatado profissionalmente em um modal
+- **Cópia Rápida**: Copie a resposta sugerida com um clique
+- **Scroll Automático**: O chat rola automaticamente para novas mensagens
+
 ---
 
 ## 📡 API Endpoints
@@ -190,22 +217,50 @@ A API RESTful está documentada automaticamente em `/docs` (Swagger UI) e `/redo
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| `POST` | `/api/v1/emails/classificar` | Classificar email por texto |
-| `POST` | `/api/v1/emails/classificar/arquivo` | Classificar email por arquivo (.txt ou .pdf) |
+| `GET` | `/api/v1/emails/providers` | Lista provedores de IA disponíveis e seus status |
+| `POST` | `/api/v1/emails/classificar` | Classificar email por texto (com parâmetro `provider` opcional) |
+| `POST` | `/api/v1/emails/classificar/arquivo` | Classificar email por arquivo (.txt, .pdf, .eml, .msg, .mbox) |
 | `GET` | `/api/v1/emails/health` | Health check do serviço |
 
 ### Exemplos de Uso
 
-#### 1. Classificar por Texto
+#### 1. Listar Provedores de IA
+
+**Request:**
+```bash
+curl -X GET "http://localhost:8000/api/v1/emails/providers"
+```
+
+**Response:**
+```json
+{
+  "default": "openai",
+  "providers": {
+    "openai": {
+      "available": true,
+      "model": "gpt-3.5-turbo"
+    },
+    "gemini": {
+      "available": true,
+      "model": "gemini-1.5-flash"
+    }
+  }
+}
+```
+
+#### 2. Classificar por Texto
 
 **Request:**
 ```bash
 curl -X POST "http://localhost:8000/api/v1/emails/classificar" \
   -H "Content-Type: application/json" \
   -d '{
-    "conteudo": "Olá, preciso de ajuda com meu pedido #12345. Quando será entregue?"
+    "conteudo": "Olá, preciso de ajuda com meu pedido #12345. Quando será entregue?",
+    "provider": "openai"
   }'
 ```
+
+> **Nota:** O parâmetro `provider` é opcional. Se não fornecido, será usado o provider padrão configurado.
 
 **Response:**
 ```json
@@ -216,12 +271,12 @@ curl -X POST "http://localhost:8000/api/v1/emails/classificar" \
 }
 ```
 
-#### 2. Classificar por Arquivo
+#### 3. Classificar por Arquivo
 
 **Request:**
 ```bash
-curl -X POST "http://localhost:8000/api/v1/emails/classificar/arquivo" \
-  -F "arquivo=@email.txt"
+curl -X POST "http://localhost:8000/api/v1/emails/classificar/arquivo?provider=gemini" \
+  -F "arquivo=@email.eml"
 ```
 
 **Response:**
@@ -229,9 +284,14 @@ curl -X POST "http://localhost:8000/api/v1/emails/classificar/arquivo" \
 {
   "categoria": "Improdutivo",
   "confianca": 0.88,
-  "resposta_sugerida": "Agradecemos sua mensagem de felicitações. Desejamos um ótimo Natal e um próspero Ano Novo!"
+  "resposta_sugerida": "Agradecemos sua mensagem de felicitações. Desejamos um ótimo Natal e um próspero Ano Novo!",
+  "nome_arquivo": "email.eml"
 }
 ```
+
+> **Formatos Suportados:** `.txt`, `.pdf`, `.eml`, `.msg` (Outlook), `.mbox`
+> 
+> **Tamanho Máximo:** 5MB por arquivo
 
 ### Documentação Interativa
 
@@ -303,8 +363,11 @@ desafio_fullstack/
 │   │   │   ├── gemini_classificador.py
 │   │   │   └── classificador_factory.py
 │   │   ├── file_readers/         # Leitores de arquivo
-│   │   │   ├── leitor_pdf.py
-│   │   │   └── leitor_txt.py
+│   │   │   ├── leitor_txt.py     # Arquivos de texto
+│   │   │   ├── leitor_pdf.py     # Arquivos PDF
+│   │   │   ├── leitor_eml.py     # Arquivos de email (.eml)
+│   │   │   ├── leitor_msg.py     # Arquivos Outlook (.msg)
+│   │   │   └── leitor_mbox.py    # Arquivos MBOX
 │   │   └── nlp/                  # Processamento de linguagem natural
 │   │       └── preprocessador.py
 │   ├── interfaces/               # Camada de interface
@@ -323,10 +386,13 @@ desafio_fullstack/
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── components/       # Componentes Angular
-│   │   │   │   ├── email-classifier-chat/
-│   │   │   │   ├── email-upload/
-│   │   │   │   ├── email-preview-modal/
-│   │   │   │   ├── resultado-classificacao/
+│   │   │   │   ├── email-classifier-chat/    # Interface de chat principal
+│   │   │   │   ├── email-upload/             # Upload de emails
+│   │   │   │   ├── email-preview-modal/       # Modal de preview de email
+│   │   │   │   ├── resultado-classificacao/   # Exibição de resultados
+│   │   │   │   ├── chat-message/              # Componente de mensagem do chat
+│   │   │   │   ├── chat-input/                # Input do chat
+│   │   │   │   ├── chat-header/               # Cabeçalho do chat
 │   │   │   │   └── ...
 │   │   │   ├── services/         # Serviços HTTP
 │   │   │   │   └── email.service.ts
@@ -389,15 +455,42 @@ DEBUG=false
 
 ---
 
+## 🎯 Funcionalidades Implementadas
+
+### Interface do Usuário
+
+- ✅ **Interface de Chat Interativa**: Experiência de chat com histórico de mensagens, scroll automático e visualização clara das classificações
+- ✅ **Upload de Arquivos**: Suporte para múltiplos formatos (.txt, .pdf, .eml, .msg, .mbox) com validação de tamanho
+- ✅ **Seleção Dinâmica de Provider**: Interface permite escolher entre OpenAI e Gemini em tempo real
+- ✅ **Modal de Preview de Email**: Visualização profissional do email formatado com opção de copiar resposta
+- ✅ **Feedback Visual**: Indicadores de carregamento, erros e sucesso nas operações
+
+### Backend
+
+- ✅ **Clean Architecture**: Separação clara de responsabilidades (Domain, Application, Infrastructure, Interfaces)
+- ✅ **Múltiplos Leitores de Arquivo**: Suporte nativo para formatos de email comuns
+- ✅ **Factory Pattern**: Sistema flexível para adicionar novos provedores de IA
+- ✅ **Tratamento de Erros**: Exceções específicas de domínio com mensagens claras
+- ✅ **Health Check**: Endpoint para monitoramento do serviço
+- ✅ **Validação de Dados**: Pydantic para validação de entrada e saída
+
+### DevOps
+
+- ✅ **Docker Compose**: Configuração completa para desenvolvimento e produção
+- ✅ **Hot Reload**: Desenvolvimento com recarregamento automático (backend e frontend)
+- ✅ **Health Checks**: Monitoramento automático dos containers
+
 ## 📝 Melhorias Futuras
 
 - [ ] Adicionar testes de integração end-to-end
 - [ ] Implementar cache de classificações
 - [ ] Adicionar autenticação e autorização
-- [ ] Implementar histórico de classificações
-- [ ] Adicionar dashboard de métricas
+- [ ] Implementar histórico persistente de classificações
+- [ ] Adicionar dashboard de métricas e analytics
 - [ ] Configurar CI/CD
 - [ ] Deploy na nuvem (AWS, GCP, Azure)
+- [ ] Suporte a mais formatos de arquivo (docx, odt, etc.)
+- [ ] Exportação de resultados (CSV, JSON)
 
 ---
 

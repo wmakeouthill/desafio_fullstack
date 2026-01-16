@@ -39,41 +39,49 @@ export class EmailPreviewModalComponent {
         telefone: '(11) 3456-7890'
     };
 
-    /** Extrai o assunto do email original ou gera um padrão */
+    /** Extrai o assunto do resultado da IA ou do email original */
     readonly assuntoEmail = computed(() => {
+        const resultado = this.resultado();
+        
+        // Prioridade 1: Assunto extraído pela IA
+        if (resultado.assunto) {
+            return `Re: ${resultado.assunto}`;
+        }
+        
+        // Prioridade 2: Tentar extrair do email original
         const original = this.emailOriginal();
-        if (!original) {
-            return this.gerarAssuntoPadrao();
-        }
+        if (original) {
+            const padroes = [
+                /^Assunto:\s*(.+)$/im,
+                /^Subject:\s*(.+)$/im,
+                /^Ref:\s*(.+)$/im,
+                /^RE:\s*(.+)$/im,
+                /^FW:\s*(.+)$/im,
+                /^Enc:\s*(.+)$/im
+            ];
 
-        // Tenta extrair assunto do email (padrões comuns)
-        const padroes = [
-            /^Assunto:\s*(.+)$/im,
-            /^Subject:\s*(.+)$/im,
-            /^Ref:\s*(.+)$/im,
-            /^RE:\s*(.+)$/im,
-            /^FW:\s*(.+)$/im,
-            /^Enc:\s*(.+)$/im
-        ];
-
-        for (const padrao of padroes) {
-            const match = original.match(padrao);
-            if (match && match[1]) {
-                return `Re: ${match[1].trim()}`;
+            for (const padrao of padroes) {
+                const match = original.match(padrao);
+                if (match && match[1]) {
+                    return `Re: ${match[1].trim()}`;
+                }
             }
         }
 
-        // Se não encontrou, usa a primeira linha não vazia como referência
-        const linhas = original.split('\n').filter(l => l.trim());
-        if (linhas.length > 0) {
-            const primeiraLinha = linhas[0].trim();
-            if (primeiraLinha.length <= 80) {
-                return `Re: ${primeiraLinha}`;
-            }
-            return `Re: ${primeiraLinha.substring(0, 77)}...`;
-        }
-
+        // Prioridade 3: Fallback para assunto padrão
         return this.gerarAssuntoPadrao();
+    });
+
+    /** Extrai o remetente do resultado da IA */
+    readonly remetenteOriginal = computed(() => {
+        const resultado = this.resultado();
+        return resultado.remetente || null;
+    });
+
+    /** Extrai o destinatário do resultado da IA */
+    readonly destinatarioOriginal = computed(() => {
+        const resultado = this.resultado();
+        return resultado.destinatario || null;
     });
 
     private gerarAssuntoPadrao(): string {

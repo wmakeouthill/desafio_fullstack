@@ -1,0 +1,33 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "name": "email-classifier-frontend",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/email-classifier/browser",
+  "framework": "angular",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://email-classifier-api.fly.dev/api/:path*"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}
