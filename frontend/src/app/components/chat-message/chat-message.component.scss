@@ -28,13 +28,19 @@ $border-radius-sm: 8px;
     padding: 1.25rem 1.5rem;
     animation: fadeIn 0.3s ease;
     background: $dark-bg;
+    border-left: 2px solid transparent;
+    transition: background-color 0.2s ease;
 
+    // Mensagem do usuário - fundo levemente diferente
     &.user {
-        background: $dark-bg;
+        background: #161b22;
+        border-left-color: #3d4450;
     }
 
+    // Mensagem da IA - fundo mais claro com borda sutil
     &.ai {
-        background: $dark-bg;
+        background: #1f2937;
+        border-left-color: #4c3a6b;
     }
 }
 
