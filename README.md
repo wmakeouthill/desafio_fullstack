@@ -12,12 +12,6 @@
 [![OpenAI](https://img.shields.io/badge/OpenAI-GPT-412991.svg?logo=openai&logoColor=white)](https://openai.com/)
 [![Gemini](https://img.shields.io/badge/Google-Gemini-4285F4.svg?logo=google&logoColor=white)](https://ai.google.dev/)
 
-## 🌐 Demo em Produção
-
-- **Frontend (Vercel)**: [https://email-classifier-frontend-delta.vercel.app](https://email-classifier-frontend-delta.vercel.app)
-- **Backend (Cloud Run)**: [https://email-classifier-api-881402891442.southamerica-east1.run.app](https://email-classifier-api-881402891442.southamerica-east1.run.app)
-- **API Docs**: [https://email-classifier-api-881402891442.southamerica-east1.run.app/docs](https://email-classifier-api-881402891442.southamerica-east1.run.app/docs)
-
 ---
 
 ## 📋 Sobre o Projeto
