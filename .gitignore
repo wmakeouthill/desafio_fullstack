@@ -75,6 +75,8 @@ credentials/
 *.credentials
 config/secrets.*
 config/credentials.*
+*-key.json
+vercel-service-account-key.json
 
 # IDEs
 .idea/

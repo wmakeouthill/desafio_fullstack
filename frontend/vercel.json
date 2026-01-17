@@ -5,12 +5,12 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist/email-classifier/browser",
   "framework": "angular",
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://email-classifier-api-881402891442.southamerica-east1.run.app/api/:path*"
+  "functions": {
+    "api/**/*.js": {
+      "memory": 256,
+      "maxDuration": 30
     }
-  ],
+  },
   "headers": [
     {
       "source": "/assets/(.*)",
