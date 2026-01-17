@@ -6,7 +6,6 @@
  */
 
 const { GoogleAuth } = require('google-auth-library');
-const FormData = require('form-data');
 const getRawBody = require('raw-body');
 
 // URL do backend no Cloud Run (privado)
@@ -47,8 +46,9 @@ async function getIdToken() {
 
 /**
  * Desabilitar body parser do Vercel para receber raw body
+ * (usando sintaxe CommonJS para compatibilidade)
  */
-export const config = {
+module.exports.config = {
     api: {
         bodyParser: false,
     },
