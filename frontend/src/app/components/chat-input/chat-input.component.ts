@@ -5,7 +5,7 @@
  * e seleção de provider de IA.
  */
 
-import { Component, input, output, signal, computed, ChangeDetectionStrategy, HostListener, PLATFORM_ID, inject } from '@angular/core';
+import { Component, input, output, signal, computed, ChangeDetectionStrategy, HostListener, PLATFORM_ID, inject, OnInit, OnDestroy, ElementRef, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 import { AIProvider, ProvidersResponse } from '../../models';
@@ -18,10 +18,13 @@ import { AIProvider, ProvidersResponse } from '../../models';
     styleUrl: './chat-input.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChatInputComponent {
+export class ChatInputComponent implements OnInit, OnDestroy {
     // Injeções
     private readonly platformId = inject(PLATFORM_ID);
     readonly isBrowser = isPlatformBrowser(this.platformId);
+
+    // ViewChild para textarea
+    readonly textareaRef = viewChild<ElementRef<HTMLTextAreaElement>>('textareaInput');
 
     // Inputs
     readonly providers = input<ProvidersResponse | null>(null);
@@ -40,6 +43,9 @@ export class ChatInputComponent {
     readonly arquivoSelecionado = signal<File | null>(null);
     readonly menuProviderAberto = signal(false);
     readonly erro = signal<string | null>(null);
+
+    // Visual Viewport listener for mobile keyboard
+    private visualViewportHandler: (() => void) | null = null;
 
     // Computeds
     readonly podeEnviar = computed(() =>
@@ -101,6 +107,44 @@ export class ChatInputComponent {
 
         return lista;
     });
+
+    ngOnInit(): void {
+        if (!this.isBrowser) return;
+
+        // Listener para Visual Viewport API - detecta teclado virtual no mobile
+        if (window.visualViewport) {
+            this.visualViewportHandler = () => {
+                this.handleViewportResize();
+            };
+            window.visualViewport.addEventListener('resize', this.visualViewportHandler);
+            window.visualViewport.addEventListener('scroll', this.visualViewportHandler);
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (!this.isBrowser) return;
+
+        // Remove listeners
+        if (window.visualViewport && this.visualViewportHandler) {
+            window.visualViewport.removeEventListener('resize', this.visualViewportHandler);
+            window.visualViewport.removeEventListener('scroll', this.visualViewportHandler);
+        }
+    }
+
+    /**
+     * Ajusta o scroll quando o teclado virtual aparece/desaparece no mobile
+     */
+    private handleViewportResize(): void {
+        if (!window.visualViewport) return;
+
+        const textarea = this.textareaRef();
+        if (textarea?.nativeElement === document.activeElement) {
+            // Força o scroll para manter o input visível
+            setTimeout(() => {
+                textarea.nativeElement.scrollIntoView({ block: 'end', behavior: 'smooth' });
+            }, 100);
+        }
+    }
 
     onArquivoSelecionado(event: Event): void {
         const input = event.target as HTMLInputElement;
@@ -177,6 +221,22 @@ export class ChatInputComponent {
             event.preventDefault();
             this.enviar();
         }
+    }
+
+    /**
+     * Quando o input recebe foco, garante que ele fique visível
+     * (especialmente importante no mobile quando o teclado abre)
+     */
+    onInputFocus(): void {
+        if (!this.isBrowser) return;
+
+        // Pequeno delay para esperar o teclado virtual abrir
+        setTimeout(() => {
+            const textarea = this.textareaRef();
+            if (textarea) {
+                textarea.nativeElement.scrollIntoView({ block: 'end', behavior: 'smooth' });
+            }
+        }, 300);
     }
 
     iniciarNovoChat(): void {

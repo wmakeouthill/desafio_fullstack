@@ -55,10 +55,12 @@
         @if (!arquivoSelecionado()) {
             @if (isBrowser) {
                 <textarea
+                    #textareaInput
                     class="input-texto"
                     [ngModel]="conteudoEmail()"
                     (ngModelChange)="conteudoEmail.set($event)"
                     (keydown)="onKeydown($event)"
+                    (focus)="onInputFocus()"
                     placeholder="Cole o conteúdo do email aqui... ou anexe no botão à esquerda"
                     rows="1"
                     [disabled]="carregando()"></textarea>
